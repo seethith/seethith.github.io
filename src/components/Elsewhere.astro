@@ -1,0 +1,29 @@
+---
+import { socialLinks, collectedLinks } from '../data/site';
+---
+<section id="links" class="links-section" aria-labelledby="links-title">
+  <div class="section-heading">
+    <p class="section-kicker mono">ELSEWHERE</p>
+    <h2 id="links-title">在别处找到我<span class="blue-period">.</span></h2>
+  </div>
+  <div class="social-links" aria-label="社交链接">
+    {socialLinks.map(link => (
+      <a href={link.url} target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 7-5 5 5 5m8-10 5 5-5 5m-3-12-2 14" /></svg>
+        {link.title}<span aria-hidden="true">↗</span>
+      </a>
+    ))}
+  </div>
+  <div class="links-heading"><h3>值得逛逛</h3><p>收藏的工具、灵感和朋友</p></div>
+  <div class="links-grid">
+    {collectedLinks.map((link, index) => {
+      const Tag = link.url ? 'a' : 'article';
+      return <Tag class:list={['directory-card', { 'directory-pending': !link.url }]} href={link.url} target={link.url ? '_blank' : undefined} rel={link.url ? 'noopener noreferrer' : undefined}>
+        <span class="directory-icon mono" aria-hidden="true">{['⌘', '✳', '＋', '☺'][index % 4]}</span>
+        <div class="directory-copy"><h4>{link.title}</h4><p>{link.description}</p><span class="directory-category">{link.category}</span></div>
+        <span class="directory-status" aria-hidden={link.url ? 'true' : undefined}>{link.url ? '↗' : '待收录'}</span>
+      </Tag>;
+    })}
+  </div>
+  <p class="links-footnote">少量精选，慢慢收集。<span class="mono">GOOD THINGS TAKE TIME</span></p>
+</section>

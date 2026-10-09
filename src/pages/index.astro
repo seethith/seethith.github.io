@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import RippleField from '../components/RippleField';
 import PalettePlay from '../components/PalettePlay';
+import Elsewhere from '../components/Elsewhere.astro';
 import { profile, futureProjects } from '../data/site';
 ---
 <Layout>
@@ -18,7 +19,6 @@ import { profile, futureProjects } from '../data/site';
       <div class="experiment-caption"><span><span class="mono caption-index">002 /</span> 像素潮汐</span><a href="/lab/ripple/">打开实验 <span class="expand-icon" aria-hidden="true">⤢</span></a></div>
     </div>
   </section>
-
   <div class="divider-note"><span>想法不一定有用，但可以很好玩。</span><span class="mono">SCROLL TO EXPLORE</span></div>
 
   <section id="playground" class="playground-section" aria-labelledby="playground-title">
@@ -46,4 +46,5 @@ import { profile, futureProjects } from '../data/site';
     <div class="about-copy"><p>我喜欢把「如果这样会怎样」<br class="desktop-break" />变成浏览器里可以点一下的东西。</p><p class="about-secondary">这里是我的个人角落，也是一个没有截止日期的实验室。有时认真研究，有时随便折腾。不着急做得完美，先让有趣的想法发生。</p><div class="interest-tags flex flex-wrap gap-2"><span>动手创造</span><span>数字小玩具</span><span>日常灵感</span><span>保持探索</span></div></div>
     <aside class="margin-note"><span class="mono">NOTE TO SELF</span><p>允许无用。<br />保持热爱。<br /><span>慢慢来。</span></p><div class="note-scribble" aria-hidden="true">✳</div></aside>
   </section>
+  <Elsewhere />
 </Layout>
