@@ -1,0 +1,37 @@
+---
+import '../styles/global.css';
+import { profile } from '../data/site';
+interface Props { title?: string; description?: string }
+const { title = `${profile.name} · 好奇心事务所`, description = '一个持续生长的个人空间。记录想法，动手实验，做一些有趣的小玩意。' } = Astro.props;
+---
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#fbfbfc" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳到主要内容</a>
+    <div class="site-shell">
+      <header class="site-header flex items-center justify-between">
+        <a href="/" class="brand" aria-label="buluku 首页"><span class="brand-mark">b<span>✳</span></span><span>{profile.name}<span class="brand-period">.</span></span></a>
+        <nav class="flex items-center gap-7" aria-label="主要导航">
+          <a href="/#playground">小玩意</a><a href="/#about">关于我</a>
+          <span class="nav-divider" aria-hidden="true"></span>
+          <span class="nav-note mono">ENJOY THE DETOUR</span>
+        </nav>
+      </header>
+      <main id="main"><slot /></main>
+      <footer class="site-footer flex flex-wrap items-center justify-between gap-4">
+        <p>© 2026 {profile.name}<span class="footer-dot">·</span>保持好奇，慢慢生长。</p>
+        <a href="#main" class="back-top">回到顶部 <span aria-hidden="true">↑</span></a>
+      </footer>
+    </div>
+  </body>
+</html>

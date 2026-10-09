@@ -1,0 +1,49 @@
+---
+import Layout from '../layouts/Layout.astro';
+import RippleField from '../components/RippleField';
+import PalettePlay from '../components/PalettePlay';
+import { profile, futureProjects } from '../data/site';
+---
+<Layout>
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-copy">
+      <p class="eyebrow"><span class="tiny-cross" aria-hidden="true">✳</span> 你好，我是 {profile.name}</p>
+      <h1 id="hero-title">保持好奇，<br />做点<span class="curiosity-word">有趣的<span class="word-underline" aria-hidden="true"></span></span>。</h1>
+      <p class="hero-description">{profile.intro}</p>
+      <div class="hero-actions flex flex-wrap items-center gap-4"><a href="#playground" class="primary-button">逛逛我的小玩意 <span class="button-grid" aria-hidden="true">⠿</span></a><a href="#about" class="quiet-link">多了解我一点</a></div>
+      <div class="hero-footnote mono"><span class="small-line" aria-hidden="true"></span> A LITTLE CODE. A LOT OF CURIOSITY.</div>
+    </div>
+    <div class="hero-experiment">
+      <div class="experiment-frame"><RippleField client:load /></div>
+      <div class="experiment-caption"><span><span class="mono caption-index">002 /</span> 像素潮汐</span><a href="/lab/ripple/">打开实验 <span class="expand-icon" aria-hidden="true">⤢</span></a></div>
+    </div>
+  </section>
+
+  <div class="divider-note"><span>想法不一定有用，但可以很好玩。</span><span class="mono">SCROLL TO EXPLORE</span></div>
+
+  <section id="playground" class="playground-section" aria-labelledby="playground-title">
+    <div class="section-heading flex flex-wrap items-end justify-between gap-4"><div><p class="section-kicker mono">THE PLAYGROUND</p><h2 id="playground-title">我的小玩意<span class="count-badge mono">02</span></h2></div><p>一些认真做的不正经实验。</p></div>
+    <div class="project-grid">
+      <article class="project-card palette-card">
+        <div class="project-meta"><span class="mono">01 / COLOR</span><span class="project-badge">可以玩</span></div>
+        <PalettePlay client:visible />
+        <div class="project-info"><h3>收集一小片颜色</h3><p>给今天挑一组配色，顺便换个心情。</p><span class="project-tag">色彩实验</span></div>
+      </article>
+      <article class="project-card ripple-project">
+        <div class="project-meta"><span class="mono">02 / MOTION</span><span class="project-badge">可以玩</span></div>
+        <a class="ripple-project-link" href="/lab/ripple/" aria-label="打开像素潮汐实验">
+          <div class="ripple-thumbnail" aria-hidden="true"><div class="contour contour-one"></div><div class="contour contour-two"></div><div class="contour contour-three"></div><div class="contour contour-four"></div><span class="center-plus">+</span></div>
+          <div class="project-info"><h3>像素也有自己的潮汐 <span class="expand-icon">⤢</span></h3><p>轻轻碰一下，看看平静会发生什么。</p><span class="project-tag">交互实验</span></div>
+        </a>
+      </article>
+      {futureProjects.map(project => <article class="project-card future-card"><div class="project-meta"><span class="mono">{project.number} / UNKNOWN</span><span class="future-label">酝酿中</span></div><div class="future-visual" aria-hidden="true"><span class="future-plus">+</span><span class="future-annotation mono">room for the unexpected</span></div><div class="project-info"><h3>{project.title}</h3><p>{project.description}</p><span class="project-tag">{project.label}</span></div></article>)}
+    </div>
+    <div class="coming-note"><span aria-hidden="true">＋</span><p>这里还有很多空位，留给未来的好奇心。</p><span class="mono">ALWAYS A WORK IN PROGRESS</span></div>
+  </section>
+
+  <section id="about" class="about-section" aria-labelledby="about-title">
+    <div class="about-title"><p class="section-kicker mono">A BIT ABOUT ME</p><h2 id="about-title">屏幕背后，<br />一个好奇的人。</h2><span class="about-mark" aria-hidden="true">b.</span></div>
+    <div class="about-copy"><p>我喜欢把「如果这样会怎样」<br class="desktop-break" />变成浏览器里可以点一下的东西。</p><p class="about-secondary">这里是我的个人角落，也是一个没有截止日期的实验室。有时认真研究，有时随便折腾。不着急做得完美，先让有趣的想法发生。</p><div class="interest-tags flex flex-wrap gap-2"><span>动手创造</span><span>数字小玩具</span><span>日常灵感</span><span>保持探索</span></div></div>
+    <aside class="margin-note"><span class="mono">NOTE TO SELF</span><p>允许无用。<br />保持热爱。<br /><span>慢慢来。</span></p><div class="note-scribble" aria-hidden="true">✳</div></aside>
+  </section>
+</Layout>
