@@ -74,6 +74,6 @@ export default function Home() {
 
       <section id="contact" className="contact-section container" aria-labelledby="contact-title"><Reveal><SectionLabel number="05">LET’S CONNECT</SectionLabel><p className="contact-prelude">好的想法，常常始于一句</p><h2 id="contact-title">你好<span>。</span><span className="hello-star" aria-hidden="true">✳</span></h2><p className="contact-description">聊聊技术，交换灵感，或者只是打个招呼。</p><Contact /></Reveal><div className="contact-glow" aria-hidden="true" /></section>
     </main>
-    <footer className="site-footer container"><a className="footer-brand" href="#home">buluku<span>.</span></a><p className="mono">© 2026 BULUKU · BUILT WITH CURIOSITY</p><div><a href="/">第一版 <span className="mono">V1 ↗</span></a><a href={profile.repository} target="_blank" rel="noopener noreferrer">源码 <Icon name="northeast" width="13" height="13" /></a><a href="#home" aria-label="回到顶部">↑</a></div></footer>
+    <footer className="site-footer container"><a className="footer-brand" href="#home">buluku<span>.</span></a><p className="mono">© 2026 BULUKU · BUILT WITH CURIOSITY</p><div><a href="/">第一版 <span className="mono">V1 ↗</span></a><a href="/v3/">第三版 <span className="mono">V3 ↗</span></a><a href={profile.repository} target="_blank" rel="noopener noreferrer">源码 <Icon name="northeast" width="13" height="13" /></a><a href="#home" aria-label="回到顶部">↑</a></div></footer>
   </>;
 }

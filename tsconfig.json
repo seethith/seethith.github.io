@@ -6,5 +6,5 @@
     "noUncheckedIndexedAccess": true
   },
   "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist", "portfolio-v2"]
+  "exclude": ["dist", "portfolio-v2", "portfolio-v3"]
 }
