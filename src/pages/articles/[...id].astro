@@ -1,0 +1,20 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import { getArticles, articleDate } from '../../lib/articles';
+import { profile } from '../../data/site';
+export async function getStaticPaths() {
+  return (await getArticles()).map(article => ({ params: { id: article.id }, props: { article } }));
+}
+interface Props { article: CollectionEntry<'articles'> }
+const { article } = Astro.props;
+const { Content } = await render(article);
+---
+<Layout title={`${article.data.title} · ${profile.name}`} description={article.data.description ?? article.data.title}>
+  <article class="article-page">
+    <a href="/articles/" class="lab-back">← 全部文章</a>
+    <header class="article-header"><time class="mono" datetime={articleDate(article.data.date)}>{articleDate(article.data.date)}</time><h1>{article.data.title}</h1>{article.data.description && <p>{article.data.description}</p>}</header>
+    <div class="article-body"><Content /></div>
+  </article>
+</Layout>

@@ -1,12 +1,12 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import RippleField from '../../components/RippleField';
+import { profile } from '../../data/site';
 ---
-<Layout title="像素潮汐 · buluku 的小实验" description="用光标拨动点阵，让一片像素海泛起涟漪。">
+<Layout title={`像素潮汐 · ${profile.name}`} description="点击点阵，产生涟漪。">
   <section class="lab-page">
-    <a href="/#playground" class="lab-back">返回小玩意</a>
-    <div class="lab-heading"><div><p class="section-kicker mono">EXPERIMENT 002 / MOTION</p><h1>像素潮汐<span class="blue-period">.</span></h1></div><p>有时候，发一会儿呆也是正经事。</p></div>
+    <a href="/#playground" class="lab-back">← 小工具</a>
+    <div class="lab-heading"><h1>像素潮汐<span class="blue-period">.</span></h1></div>
     <RippleField client:load expanded />
-    <div class="lab-instructions"><p>移动光标拨动点阵，点击画面投下一颗石子。<br />用滑块改变波动幅度，或者暂停，让时间停一会儿。</p><span class="mono">MADE FOR NO PARTICULAR REASON</span></div>
   </section>
 </Layout>

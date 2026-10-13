@@ -1,11 +1,11 @@
 import { useState } from 'react';
 
 const palettes = [
-  { name: '海边，下午四点', colors: ['#253C59', '#799BA6', '#CBD5C8', '#F2DFC3', '#D88C6E'] },
-  { name: '路过一家花店', colors: ['#423A51', '#9480A4', '#C2A6B5', '#E7D7D4', '#AAC0A7'] },
-  { name: '一杯冰美式的时间', colors: ['#352C2A', '#8C6551', '#BC9275', '#D8C4AF', '#ECE4D9'] },
-  { name: '周末的蓝色小时', colors: ['#233D6B', '#4878A9', '#8DB6D3', '#D1E2E8', '#F0BC82'] },
-  { name: '橘子汽水与夏天', colors: ['#234D44', '#6C8A6B', '#CAD3A6', '#EFBD65', '#E67D47'] },
+  { name: '海蓝', colors: ['#253C59', '#799BA6', '#CBD5C8', '#F2DFC3', '#D88C6E'] },
+  { name: '浅紫', colors: ['#423A51', '#9480A4', '#C2A6B5', '#E7D7D4', '#AAC0A7'] },
+  { name: '咖啡', colors: ['#352C2A', '#8C6551', '#BC9275', '#D8C4AF', '#ECE4D9'] },
+  { name: '蓝橙', colors: ['#233D6B', '#4878A9', '#8DB6D3', '#D1E2E8', '#F0BC82'] },
+  { name: '橘绿', colors: ['#234D44', '#6C8A6B', '#CAD3A6', '#EFBD65', '#E67D47'] },
 ];
 
 export default function PalettePlay() {

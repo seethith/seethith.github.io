@@ -97,9 +97,9 @@ export default function RippleField({ expanded = false }: Props) {
   }
 
   return <div className={`ripple-widget ${expanded ? 'ripple-expanded' : ''}`}>
-    <div className="ripple-top mono"><span>EXPERIMENT 002</span><span className="live-label">{paused ? 'PAUSED' : 'INTERACTIVE'}</span></div>
+    <div className="ripple-top mono"><span>像素潮汐</span><span className="live-label">{paused ? '已暂停' : '可交互'}</span></div>
     <canvas ref={canvasRef} className="ripple-canvas" tabIndex={0} role="button" aria-label="像素潮汐互动区域，点击或按回车产生涟漪" onPointerMove={e => { const r = e.currentTarget.getBoundingClientRect(); pointer.current = { x: e.clientX - r.left, y: e.clientY - r.top }; }} onPointerLeave={() => { pointer.current = { x: -1000, y: -1000 }; }} onClick={e => { const r = e.currentTarget.getBoundingClientRect(); ripple(e.clientX - r.left, e.clientY - r.top); }} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); ripple(); } }} />
-    <div className="ripple-bottom"><span>移动光标，拨动一片像素海。</span><button className="icon-button" aria-label={paused ? '播放动画' : '暂停动画'} title={paused ? '播放动画' : '暂停动画'} onClick={() => setPaused(p => !p)}>{paused ? <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 9 6-9 6Z" /></svg> : <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6v12M15 6v12" /></svg>}</button></div>
-    {expanded && <div className="ripple-controls"><label htmlFor="intensity">波动幅度 <span className="mono">{intensity}%</span></label><input id="intensity" type="range" min="10" max="100" value={intensity} onChange={e => setIntensity(Number(e.target.value))} /><button className="text-button" onClick={() => ripple()}>投一颗小石子</button><span className="ripple-count mono" aria-live="polite">{counter} 次涟漪</span></div>}
+    <div className="ripple-bottom"><span>点击或按回车产生涟漪</span><button className="icon-button" aria-label={paused ? '播放动画' : '暂停动画'} title={paused ? '播放动画' : '暂停动画'} onClick={() => setPaused(p => !p)}>{paused ? <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 9 6-9 6Z" /></svg> : <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6v12M15 6v12" /></svg>}</button></div>
+    {expanded && <div className="ripple-controls"><label htmlFor="intensity">波动幅度 <span className="mono">{intensity}%</span></label><input id="intensity" type="range" min="10" max="100" value={intensity} onChange={e => setIntensity(Number(e.target.value))} /><button className="text-button" onClick={() => ripple()}>产生涟漪</button><span className="ripple-count mono" aria-live="polite">{counter} 次涟漪</span></div>}
   </div>;
 }
