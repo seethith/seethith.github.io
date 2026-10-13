@@ -37,6 +37,7 @@ npm run preview
 - `src/components/Elsewhere.astro`：分层卡片链接区。
 - `src/components/RippleField.tsx`：Canvas 点阵、指针交互、涟漪、暂停和幅度调节。
 - `src/components/PalettePlay.tsx`：五组配色和色号复制。
+- `src/components/Appearance.astro`：浅色、深色、跟随系统，以及蓝、青绿、紫、樱粉四种主题色。
 - `src/styles/global.css`：整体视觉、字体、间距和响应式规则。
 
 GitHub 入口已关联账号 `seethith`。象棋工具使用腾讯云外部链接，在新标签页打开。
@@ -52,6 +53,8 @@ GitHub 入口已关联账号 `seethith`。象棋工具使用腾讯云外部链�
 5. 执行类型检查和构建，检查桌面、手机和键盘交互。
 
 所有演示在浏览器里运行。配色复制在浏览器拒绝剪贴板访问时会显示色号；减少动态效果的系统设置会让点阵默认暂停。
+
+右上角外观设置保存在访客浏览器中，刷新、跨页面访问后保留，默认跟随系统。主题色同步作用于链接、卡片装饰和像素潮汐。浏览器禁用本地存储时仍可切换，重新打开页面会恢复默认。颜色统一在 `global.css` 开头定义，页面加载前恢复外观以减少闪烁。
 
 ## 发布文章
 

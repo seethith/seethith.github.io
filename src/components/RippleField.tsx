@@ -27,6 +27,14 @@ export default function RippleField({ expanded = false }: Props) {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+    let accentRgb = '', mutedRgb = '';
+    const updateColors = () => {
+      const style = getComputedStyle(document.documentElement);
+      accentRgb = style.getPropertyValue('--accent-rgb').trim();
+      mutedRgb = style.getPropertyValue('--dot-rgb').trim();
+    };
+    updateColors();
+    window.addEventListener('appearancechange', updateColors);
     let width = 0, height = 0, frame = 0, phase = 0, last = 0, visible = true;
     const resize = new ResizeObserver(([entry]) => {
       if (!entry) return;
@@ -80,13 +88,13 @@ export default function RippleField({ expanded = false }: Props) {
           }
           const strength = Math.min(1, (wave + 1) * .36 * envelope + pulse);
           const radius = .65 + envelope * .5 + strength * 1.4 * amp;
-          ctx!.fillStyle = dist < extent * .88 ? `rgba(42, 79, 221, ${.3 + strength * .65})` : `rgba(113, 120, 142, ${.12 + envelope * .25})`;
+          ctx!.fillStyle = dist < extent * .88 ? `rgba(${accentRgb}, ${.3 + strength * .65})` : `rgba(${mutedRgb}, ${.12 + envelope * .25})`;
           ctx!.beginPath(); ctx!.arc(px, py, Math.max(.35, radius), 0, Math.PI * 2); ctx!.fill();
         }
       }
     }
     frame = requestAnimationFrame(draw);
-    return () => { cancelAnimationFrame(frame); resize.disconnect(); visibility.disconnect(); };
+    return () => { cancelAnimationFrame(frame); resize.disconnect(); visibility.disconnect(); window.removeEventListener('appearancechange', updateColors); };
   }, [expanded]);
 
   function ripple(x?: number, y?: number) {

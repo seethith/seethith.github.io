@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import { profile } from '../data/site';
+import Appearance from '../components/Appearance.astro';
 interface Props { title?: string; description?: string }
 const { title = `${profile.name} · 个人主页`, description = profile.intro } = Astro.props;
 ---
@@ -11,6 +12,23 @@ const { title = `${profile.name} · 个人主页`, description = profile.intro }
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <meta name="theme-color" content="#fbfbfc" />
+    <script is:inline>
+      // Restore before first paint, including when returning from another page.
+      (() => {
+        let mode = 'system', accent = 'blue';
+        try {
+          const savedMode = localStorage.getItem('buluku-color-mode');
+          const savedAccent = localStorage.getItem('buluku-accent');
+          if (['light', 'dark', 'system'].includes(savedMode)) mode = savedMode;
+          if (['blue', 'green', 'purple', 'pink'].includes(savedAccent)) accent = savedAccent;
+        } catch {}
+        const theme = mode === 'system' ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : mode;
+        document.documentElement.dataset.mode = mode;
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.dataset.accent = accent;
+        document.querySelector('meta[name="theme-color"]').content = theme === 'dark' ? '#14161d' : '#fbfbfc';
+      })();
+    </script>
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -21,9 +39,12 @@ const { title = `${profile.name} · 个人主页`, description = profile.intro }
     <div class="site-shell">
       <header class="site-header flex items-center justify-between">
         <a href="/" class="brand" aria-label="buluku 首页"><span class="brand-mark">b<span>✳</span></span><span>{profile.name}<span class="brand-period">.</span></span></a>
-        <nav class="flex items-center gap-7" aria-label="主要导航">
-          <a href="/#playground">小工具</a><a href="/#articles">文章</a><a href="/#links">链接</a>
-        </nav>
+        <div class="header-actions">
+          <nav class="flex items-center gap-7" aria-label="主要导航">
+            <a href="/#playground">小工具</a><a href="/#articles">文章</a><a href="/#links">链接</a>
+          </nav>
+          <Appearance />
+        </div>
       </header>
       <main id="main"><slot /></main>
       <footer class="site-footer flex flex-wrap items-center justify-between gap-4">
