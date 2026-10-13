@@ -48,7 +48,7 @@ const { title = `${profile.name} · 个人主页`, description = profile.intro }
       </header>
       <main id="main"><slot /></main>
       <footer class="site-footer flex flex-wrap items-center justify-between gap-4">
-        <p>© 2026 {profile.name}</p>
+        <p>© 2026 {profile.name} <a href="/v2/" style="margin-left: 1rem; color: var(--accent)">第二版主页 ↗</a></p>
         <a href="#main" class="back-top">回到顶部 <span aria-hidden="true">↑</span></a>
       </footer>
     </div>

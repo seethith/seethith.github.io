@@ -5,9 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev --host 127.0.0.1",
-    "build": "astro build",
+    "build": "astro build && npm run build:v2 && node scripts/merge-v2.mjs",
+    "build:v2": "npm --prefix portfolio-v2 run build",
+    "dev:v2": "npm --prefix portfolio-v2 run dev",
     "preview": "astro preview --host 127.0.0.1",
-    "check": "astro check"
+    "check": "astro check && npm --prefix portfolio-v2 run check"
   },
   "dependencies": {
     "@astrojs/react": "7.0.1",

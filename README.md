@@ -4,7 +4,8 @@
 
 ## 在线访问与自动发布
 
-- 网站：https://seethith.github.io/
+- 第一版：https://seethith.github.io/
+- 第二版：https://seethith.github.io/v2/
 - 源码：https://github.com/seethith/seethith.github.io
 - 使用 GitHub Pages 和 `.github/workflows/deploy.yml` 自动发布。
 - 向 `main` 分支推送修改后，GitHub 会先检查类型，再构建并发布。可在仓库 Actions 页面查看进度或手动重跑。
@@ -16,6 +17,7 @@
 
 ```sh
 npm install
+npm ci --prefix portfolio-v2
 npm run dev
 ```
 
@@ -28,6 +30,26 @@ npm run preview
 ```
 
 `dist/` 为可部署的静态输出。不需要数据库、账号系统或 AI API 密钥。
+
+## 第二版 Portfolio
+
+`portfolio-v2/` 是独立的 Next.js App Router 项目，使用 React、TypeScript、Tailwind CSS 和 Framer Motion。第一版保持 Astro，两个版本由同一个 GitHub Pages 工作流发布。
+
+```sh
+npm run dev:v2
+```
+
+打开终端打印地址下的 `/v2/`。完整构建会先生成第一版，再将 Next.js 的静态导出复制到 `dist/v2/`。Next.js 设置了 `basePath: '/v2'`、`output: 'export'` 和 `trailingSlash: true`，无需服务器。
+
+- `portfolio-v2/src/lib/content.ts`：名字、项目、链接和技术兴趣。项目源码未提供时明确显示「源码待补充」。
+- `portfolio-v2/src/app/page.tsx`：关于、作品、经历、文章和联系方式。研究、论文、竞赛、实习目前是明确的待补充位置；请用真实资料替换。
+- `portfolio-v2/src/components/Orbital.tsx`：原创 SVG 光环、轻量 Canvas 星点与鼠标视差。离开视口或切换后台时停止 Canvas 循环，支持手动暂停及系统减少动态效果。
+- `portfolio-v2/src/components/Skills.tsx`：可点击及键盘操作的领域卡片。
+- `portfolio-v2/src/components/Header.tsx`：导航、深浅色和三种主题色；偏好单独保存，不影响第一版。
+- `portfolio-v2/src/app/globals.css`：视觉与响应式布局。
+- `portfolio-v2/public/images/`：原创 SVG 项目概念封面及分享图，项目图片延迟加载。
+
+默认深色。主要链接和内容在静态 HTML 中可用；没有提供邮箱时，联系入口使用真实 GitHub 账号。文章入口复用第一版的 Markdown 文章系统。
 
 ## 页面和内容
 

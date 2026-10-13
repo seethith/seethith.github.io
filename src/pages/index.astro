@@ -31,7 +31,7 @@ const articles = await getArticles();
         </div>
         <div class="project-info"><h3>{xiangqi.title}<span class="expand-icon" aria-hidden="true">↗</span></h3><p>摆棋盘，分析下一步。</p></div>
       </a>
-      <article class="project-card palette-card">
+      <article id="palette" class="project-card palette-card">
         <PalettePlay client:visible />
         <div class="project-info"><h3>配色工具</h3><p>5 组预设配色。</p></div>
       </article>
