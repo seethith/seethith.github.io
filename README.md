@@ -39,7 +39,7 @@ npm run preview
 - `src/components/PalettePlay.tsx`：五组配色和色号复制。
 - `src/components/Appearance.astro`：浅色、深色、跟随系统，以及蓝、青绿、紫、樱粉四种主题色。
 - `src/components/Atmosphere.astro`：固定全屏背景与轻量 Canvas 樱花。后台和系统减少动态效果时暂停。
-- `src/components/MusicPlayer.tsx`：左下角音乐卡片，展开歌单、播放暂停、切歌、进度和音量。
+- `src/components/MusicPlayer.tsx`：左下角音乐卡片，展开歌单、播放暂停、切歌、进度、音量与列表／单曲循环。
 - `src/data/music.ts`：站长选择的歌曲、音源、封面及可选来源说明。
 - `public/images/wallpapers/`：用户提供的黑白插画，压缩为桌面、手机和设置缩略图三个 WebP 文件。
 - `src/styles/global.css`：整体视觉、字体、间距和响应式规则。
@@ -66,13 +66,15 @@ GitHub 入口已关联账号 `seethith`。象棋工具使用腾讯云外部链�
 
 播放器使用原生 `<audio>`，只在点击播放或歌单曲目时加载音源，不自动播放；刷新页面也保持暂停。通过 Astro `ClientRouter` 与持久化 React 组件，站内进入文章、实验页和返回时保留同一个播放器及播放进度。完整刷新、打开新标签页和离开本站不属于连续播放范围。
 
-正式歌曲由站长提供，在 `src/data/music.ts` 中填写：
+当前歌单按站长提供的顺序收录《中间人》《just two of us》《燕无歇》《眼福》。原文件只有 AAC 音轨，已无损封装为支持渐进播放的 M4A，保存在 `public/music/`，没有重新压缩。歌手信息未提供时不显示，封面使用内置的四色音符图案。
+
+在 `src/data/music.ts` 中添加或调整歌曲：
 
 ```ts
-{ id: 'song-id', title: '歌曲名', artist: '歌手', src: '/music/song.mp3', cover: '/music/cover.webp' }
+{ id: 'song-id', title: '歌曲名', artist: '歌手', src: '/music/song.m4a', duration: 200, cover: '/music/cover.webp' }
 ```
 
-音频放在 `public/music/`，也可以填写支持浏览器播放的 HTTPS 音频直链。`cover` 可省略；`credit: { label, href }` 可添加来源说明。未配置曲目时显示空歌单。本站的外观控件与樱花画布也跨页保留，避免切页后失效或重复启动。
+音频放在 `public/music/`，也可以填写支持浏览器播放的 HTTPS 音频直链。`artist`、`cover`、`duration` 可省略；`duration` 单位为秒，用于未加载音频时展示时长；`credit: { label, href }` 可添加来源说明。音量和循环模式保存在本机，播放状态不在刷新时恢复。未配置曲目时显示空歌单。本站的外观控件与樱花画布也跨页保留，避免切页后失效或重复启动。
 
 ## 发布文章
 
