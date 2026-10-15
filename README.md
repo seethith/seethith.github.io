@@ -39,6 +39,8 @@ npm run preview
 - `src/components/PalettePlay.tsx`：五组配色和色号复制。
 - `src/components/Appearance.astro`：浅色、深色、跟随系统，以及蓝、青绿、紫、樱粉四种主题色。
 - `src/components/Atmosphere.astro`：固定全屏背景与轻量 Canvas 樱花。后台和系统减少动态效果时暂停。
+- `src/components/MusicPlayer.tsx`：左下角音乐卡片，展开歌单、播放暂停、切歌、进度和音量。
+- `src/data/music.ts`：站长选择的歌曲、音源、封面及可选来源说明。
 - `public/images/wallpapers/`：用户提供的黑白插画，压缩为桌面、手机和设置缩略图三个 WebP 文件。
 - `src/styles/global.css`：整体视觉、字体、间距和响应式规则。
 
@@ -59,6 +61,18 @@ GitHub 入口已关联账号 `seethith`。象棋工具使用腾讯云外部链�
 右上角外观设置保存在访客浏览器中，刷新、跨页面访问后保留，默认跟随系统。主题色同步作用于链接、卡片装饰和像素潮汐。浏览器禁用本地存储时仍可切换，重新打开页面会恢复默认。颜色统一在 `global.css` 开头定义，页面加载前恢复外观以减少闪烁。
 
 外观设置还提供黑白插画、柔光渐变、关闭壁纸三种背景，以及独立的樱花开关。默认使用黑白插画并开启少量樱花；系统要求减少动态效果时停用樱花。关闭壁纸会恢复原先的纯色布局。背景和樱花设置同样在本机保存，并在站内页面间保持一致。樱花由原创 Canvas 路径绘制，无额外动画依赖；装饰层不会拦截点击。
+
+## 音乐播放器
+
+播放器使用原生 `<audio>`，只在点击播放或歌单曲目时加载音源，不自动播放；刷新页面也保持暂停。通过 Astro `ClientRouter` 与持久化 React 组件，站内进入文章、实验页和返回时保留同一个播放器及播放进度。完整刷新、打开新标签页和离开本站不属于连续播放范围。
+
+正式歌曲由站长提供，在 `src/data/music.ts` 中填写：
+
+```ts
+{ id: 'song-id', title: '歌曲名', artist: '歌手', src: '/music/song.mp3', cover: '/music/cover.webp' }
+```
+
+音频放在 `public/music/`，也可以填写支持浏览器播放的 HTTPS 音频直链。`cover` 可省略；`credit: { label, href }` 可添加来源说明。未配置曲目时显示空歌单。本站的外观控件与樱花画布也跨页保留，避免切页后失效或重复启动。
 
 ## 发布文章
 

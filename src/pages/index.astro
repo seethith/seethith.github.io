@@ -43,7 +43,7 @@ const articles = await getArticles();
   </section>
 
   <section id="articles" class="articles-section" aria-labelledby="articles-title">
-    <div class="section-heading flex items-center justify-between gap-4"><h2 id="articles-title">文章</h2>{articles.length > 0 && <a href="/articles/" class="section-more">全部文章 <span aria-hidden="true">↗</span></a>}</div>
+    <div class="section-heading flex items-center justify-between gap-4"><h2 id="articles-title">文章</h2><a href="/articles/" class="section-more">全部文章 <span aria-hidden="true">↗</span></a></div>
     <ArticleList articles={articles.slice(0, 3)} />
   </section>
   <Elsewhere />

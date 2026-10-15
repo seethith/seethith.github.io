@@ -11,7 +11,7 @@ const accents = [
   { value: 'pink', label: '樱粉', color: '#cb719a' },
 ];
 ---
-<details class="appearance" id="appearance">
+<details class="appearance" id="appearance" transition:persist="appearance">
   <summary class="appearance-toggle" aria-label="外观设置" title="外观设置">
     <svg class="theme-sun" viewBox="0 0 24 24" aria-hidden="true"><path d={modes[0].path} /></svg>
     <svg class="theme-moon" viewBox="0 0 24 24" aria-hidden="true"><path d={modes[1].path} /></svg>
@@ -119,6 +119,7 @@ const accents = [
   });
   system.addEventListener('change', () => { if (mode === 'system') apply(); });
   reducedMotion.addEventListener('change', apply);
+  document.addEventListener('astro:after-swap', () => { picker.open = false; apply(); });
   window.addEventListener('storage', event => {
     if (event.key === modeKey || event.key === null) mode = validMode(event.newValue);
     if (event.key === accentKey || event.key === null) accent = validAccent(event.newValue);

@@ -3,6 +3,9 @@ import '../styles/global.css';
 import { profile } from '../data/site';
 import Appearance from '../components/Appearance.astro';
 import Atmosphere from '../components/Atmosphere.astro';
+import { ClientRouter } from 'astro:transitions';
+import MusicPlayer from '../components/MusicPlayer';
+import { musicTracks } from '../data/music';
 interface Props { title?: string; description?: string }
 const { title = `${profile.name} · 个人主页`, description = profile.intro } = Astro.props;
 ---
@@ -13,6 +16,7 @@ const { title = `${profile.name} · 个人主页`, description = profile.intro }
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <meta name="theme-color" content="#fbfbfc" />
+    <ClientRouter fallback="swap" />
     <script is:inline>
       // Restore before first paint, including when returning from another page.
       (() => {
@@ -61,5 +65,6 @@ const { title = `${profile.name} · 个人主页`, description = profile.intro }
         <a href="#main" class="back-top">回到顶部 <span aria-hidden="true">↑</span></a>
       </footer>
     </div>
+    <MusicPlayer tracks={musicTracks} client:load transition:persist="music-player" />
   </body>
 </html>
