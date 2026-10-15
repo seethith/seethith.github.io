@@ -38,6 +38,32 @@ const accents = [
         </label>)}
       </div>
     </fieldset>
+    <fieldset class="wallpaper-settings">
+      <legend>背景</legend>
+      <div class="wallpaper-options">
+        <label class="wallpaper-option">
+          <input type="radio" name="wallpaper" value="ink" checked />
+          <span class="wallpaper-sample wallpaper-sample-ink" aria-hidden="true"></span>
+          <span>黑白插画</span>
+        </label>
+        <label class="wallpaper-option">
+          <input type="radio" name="wallpaper" value="glow" />
+          <span class="wallpaper-sample wallpaper-sample-glow" aria-hidden="true"></span>
+          <span>柔光渐变</span>
+        </label>
+        <label class="wallpaper-option">
+          <input type="radio" name="wallpaper" value="none" />
+          <span class="wallpaper-sample wallpaper-sample-none" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 18 18 6" /></svg></span>
+          <span>关闭壁纸</span>
+        </label>
+      </div>
+    </fieldset>
+    <label class="sakura-option">
+      <span class="sakura-option-label"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 10C7 2 4 7 7 11c-8 0-6 6-1 6-2 6 4 7 6 2 2 5 8 4 6-2 5 0 7-6-1-6 3-4 0-9-5-1Z" /></svg>飘落樱花</span>
+      <input type="checkbox" name="sakura" role="switch" />
+      <span class="setting-switch" aria-hidden="true"></span>
+    </label>
+    <p class="motion-note">已跟随系统减少动态效果</p>
   </div>
 </details>
 <script>
@@ -47,17 +73,31 @@ const accents = [
   const system = window.matchMedia('(prefers-color-scheme: dark)');
   const modeKey = 'buluku-color-mode';
   const accentKey = 'buluku-accent';
+  const wallpaperKey = 'buluku-wallpaper';
+  const sakuraKey = 'buluku-sakura';
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const validMode = (value: string | null | undefined) => ['light', 'dark', 'system'].includes(value ?? '') ? value! : 'system';
   const validAccent = (value: string | null | undefined) => ['blue', 'green', 'purple', 'pink'].includes(value ?? '') ? value! : 'blue';
+  const validWallpaper = (value: string | null | undefined) => ['ink', 'glow', 'none'].includes(value ?? '') ? value! : 'ink';
   let mode = validMode(root.dataset.mode);
   let accent = validAccent(root.dataset.accent);
+  let wallpaper = validWallpaper(root.dataset.wallpaper);
+  let sakura = root.dataset.sakura === 'on';
 
   function apply() {
     root.dataset.mode = mode;
     root.dataset.theme = mode === 'system' ? (system.matches ? 'dark' : 'light') : mode;
     root.dataset.accent = accent;
+    root.dataset.wallpaper = wallpaper;
+    root.dataset.sakura = sakura ? 'on' : 'off';
     picker.querySelectorAll<HTMLInputElement>('input').forEach(input => {
-      input.checked = input.value === (input.name === 'color-mode' ? mode : accent);
+      if (input.name === 'color-mode') input.checked = input.value === mode;
+      if (input.name === 'accent') input.checked = input.value === accent;
+      if (input.name === 'wallpaper') input.checked = input.value === wallpaper;
+      if (input.name === 'sakura') {
+        input.checked = sakura && !reducedMotion.matches;
+        input.disabled = reducedMotion.matches;
+      }
     });
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', root.dataset.theme === 'dark' ? '#14161d' : '#fbfbfc');
     window.dispatchEvent(new Event('appearancechange'));
@@ -67,17 +107,24 @@ const accents = [
     if (!(input instanceof HTMLInputElement)) return;
     if (input.name === 'color-mode') mode = validMode(input.value);
     if (input.name === 'accent') accent = validAccent(input.value);
+    if (input.name === 'wallpaper') wallpaper = validWallpaper(input.value);
+    if (input.name === 'sakura') sakura = input.checked;
     apply();
     try {
       localStorage.setItem(modeKey, mode);
       localStorage.setItem(accentKey, accent);
+      localStorage.setItem(wallpaperKey, wallpaper);
+      localStorage.setItem(sakuraKey, sakura ? 'on' : 'off');
     } catch { /* The controls still work when browser storage is unavailable. */ }
   });
   system.addEventListener('change', () => { if (mode === 'system') apply(); });
+  reducedMotion.addEventListener('change', apply);
   window.addEventListener('storage', event => {
     if (event.key === modeKey || event.key === null) mode = validMode(event.newValue);
     if (event.key === accentKey || event.key === null) accent = validAccent(event.newValue);
-    if (event.key === modeKey || event.key === accentKey || event.key === null) apply();
+    if (event.key === wallpaperKey || event.key === null) wallpaper = validWallpaper(event.newValue);
+    if (event.key === sakuraKey || event.key === null) sakura = event.newValue === null ? !reducedMotion.matches : event.newValue === 'on';
+    if ([modeKey, accentKey, wallpaperKey, sakuraKey, null].includes(event.key)) apply();
   });
   document.addEventListener('pointerdown', event => {
     if (event.target instanceof Node && !picker.contains(event.target)) picker.open = false;

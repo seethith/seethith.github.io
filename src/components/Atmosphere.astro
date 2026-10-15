@@ -1,0 +1,89 @@
+<div class="wallpaper-layer" aria-hidden="true"></div>
+<canvas class="sakura-canvas" aria-hidden="true"></canvas>
+
+<script>
+  const canvas = document.querySelector<HTMLCanvasElement>('.sakura-canvas')!;
+  const context = canvas.getContext('2d');
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  type Petal = { x: number; y: number; size: number; speed: number; drift: number; phase: number; angle: number; alpha: number };
+  let petals: Petal[] = [];
+  let width = 0, height = 0, frame = 0, lastTime = 0;
+  let dark = document.documentElement.dataset.theme === 'dark';
+  const random = (min: number, max: number) => min + Math.random() * (max - min);
+  const enabled = () => document.documentElement.dataset.sakura === 'on' && !reducedMotion.matches && !document.hidden;
+
+  function makePetal(initial = false): Petal {
+    return {
+      x: random(-20, width + 20), y: initial ? random(0, height) : -25,
+      size: random(5, 10), speed: random(15, 30), drift: random(-8, 5),
+      phase: random(0, Math.PI * 2), angle: random(-0.7, 0.7), alpha: random(0.35, 0.65),
+    };
+  }
+
+  function resize() {
+    width = document.documentElement.clientWidth;
+    height = window.innerHeight;
+    const ratio = Math.min(devicePixelRatio || 1, 1.5);
+    canvas.width = Math.round(width * ratio);
+    canvas.height = Math.round(height * ratio);
+    context?.setTransform(ratio, 0, 0, ratio, 0, 0);
+    petals = Array.from({ length: width < 760 ? 8 : 16 }, () => makePetal(true));
+  }
+
+  function draw(time: number) {
+    frame = 0;
+    if (!context || !enabled()) return;
+    if (!lastTime) lastTime = time;
+    const elapsed = time - lastTime;
+    if (elapsed >= 1000 / 30) {
+      const delta = Math.min(elapsed / 1000, 0.06);
+      lastTime = time;
+      context.clearRect(0, 0, width, height);
+      for (let i = 0; i < petals.length; i++) {
+        let petal = petals[i]!;
+        petal.y += petal.speed * delta;
+        petal.phase += delta * 0.45;
+        petal.x += (petal.drift + Math.sin(petal.phase) * 8) * delta;
+        if (petal.y > height + 30 || petal.x < -45 || petal.x > width + 45) {
+          petal = petals[i] = makePetal();
+        }
+        context.save();
+        context.translate(petal.x, petal.y);
+        context.rotate(petal.angle + Math.sin(petal.phase) * 0.45);
+        context.scale(petal.size, petal.size * (0.65 + Math.abs(Math.sin(petal.phase)) * 0.35));
+        context.globalAlpha = petal.alpha;
+        context.fillStyle = dark ? '#f4acc9' : '#d99bb5';
+        context.beginPath();
+        context.moveTo(0, -0.9);
+        context.bezierCurveTo(-1.15, -0.7, -0.9, 0.5, 0, 1);
+        context.bezierCurveTo(0.9, 0.5, 1.15, -0.7, 0.3, -0.95);
+        context.lineTo(0.12, -0.55);
+        context.closePath();
+        context.fill();
+        context.restore();
+      }
+    }
+    frame = requestAnimationFrame(draw);
+  }
+
+  function sync() {
+    dark = document.documentElement.dataset.theme === 'dark';
+    if (frame) cancelAnimationFrame(frame);
+    frame = 0;
+    lastTime = 0;
+    if (context && enabled()) {
+      if (!width) resize();
+      frame = requestAnimationFrame(draw);
+    } else {
+      context?.clearRect(0, 0, width, height);
+    }
+  }
+
+  window.addEventListener('appearancechange', sync);
+  document.addEventListener('visibilitychange', sync);
+  reducedMotion.addEventListener('change', sync);
+  window.addEventListener('resize', () => { resize(); sync(); }, { passive: true });
+  window.addEventListener('pagehide', () => { if (frame) cancelAnimationFrame(frame); frame = 0; });
+  window.addEventListener('pageshow', sync);
+  sync();
+</script>

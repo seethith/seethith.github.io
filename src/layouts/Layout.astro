@@ -2,11 +2,12 @@
 import '../styles/global.css';
 import { profile } from '../data/site';
 import Appearance from '../components/Appearance.astro';
+import Atmosphere from '../components/Atmosphere.astro';
 interface Props { title?: string; description?: string }
 const { title = `${profile.name} · 个人主页`, description = profile.intro } = Astro.props;
 ---
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-wallpaper="ink">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -15,17 +16,24 @@ const { title = `${profile.name} · 个人主页`, description = profile.intro }
     <script is:inline>
       // Restore before first paint, including when returning from another page.
       (() => {
-        let mode = 'system', accent = 'blue';
+        let mode = 'system', accent = 'blue', wallpaper = 'ink';
+        let sakura = !matchMedia('(prefers-reduced-motion: reduce)').matches;
         try {
           const savedMode = localStorage.getItem('buluku-color-mode');
           const savedAccent = localStorage.getItem('buluku-accent');
           if (['light', 'dark', 'system'].includes(savedMode)) mode = savedMode;
           if (['blue', 'green', 'purple', 'pink'].includes(savedAccent)) accent = savedAccent;
+          const savedWallpaper = localStorage.getItem('buluku-wallpaper');
+          const savedSakura = localStorage.getItem('buluku-sakura');
+          if (['ink', 'glow', 'none'].includes(savedWallpaper)) wallpaper = savedWallpaper;
+          if (['on', 'off'].includes(savedSakura)) sakura = savedSakura === 'on';
         } catch {}
         const theme = mode === 'system' ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : mode;
         document.documentElement.dataset.mode = mode;
         document.documentElement.dataset.theme = theme;
         document.documentElement.dataset.accent = accent;
+        document.documentElement.dataset.wallpaper = wallpaper;
+        document.documentElement.dataset.sakura = sakura ? 'on' : 'off';
         document.querySelector('meta[name="theme-color"]').content = theme === 'dark' ? '#14161d' : '#fbfbfc';
       })();
     </script>
@@ -35,6 +43,7 @@ const { title = `${profile.name} · 个人主页`, description = profile.intro }
     <title>{title}</title>
   </head>
   <body>
+    <Atmosphere />
     <a class="skip-link" href="#main">跳到主要内容</a>
     <div class="site-shell">
       <header class="site-header flex items-center justify-between">
