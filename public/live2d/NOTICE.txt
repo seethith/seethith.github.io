@@ -1,0 +1,22 @@
+Live2D mascot — Hiyori Momose
+
+This content uses sample data owned and copyrighted by Live2D Inc. The sample data are utilized in accordance with terms and conditions set by Live2D Inc. This content itself is created at the author's sole discretion.
+
+Model: Hiyori Momose / 百瀬ひより, © Live2D Inc.
+Source: https://github.com/Live2D/CubismWebSamples/tree/de9eb4bec4326b81fe67a54e84322fdc39bc7446/Samples/Resources/Hiyori
+Version: CubismWebSamples 4-r.7 (de9eb4bec4326b81fe67a54e84322fdc39bc7446)
+The character design, model and textures are unmodified. The model manifest retains only the TapBody greeting; automatic blinking and breathing replace the sample Idle performances. No sample audio is used.
+Model terms: https://www.live2d.com/eula/live2d-free-material-license-agreement_en.html
+Character terms: https://www.live2d.com/eula/live2d-sample-model-terms_en.html
+
+Cubism Core, © Live2D Inc. — Redistributable Code, unmodified.
+Source: https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js
+Retrieved: 2026-10-16
+SHA256: 25ae938cb4fe282ce189b357bcc97e603d1e1f7ec78bf04150d401c23cdc792f
+Core license: https://www.live2d.com/eula/live2d-proprietary-software-license-agreement_en.html
+The Core and model remain subject to their respective Live2D terms. They are not covered by the website's code license. Copies of the relevant terms and upstream notices are included in /live2d/licenses/.
+
+Renderer: pixi-live2d-display 0.4.0, © guansss, MIT
+https://github.com/guansss/pixi-live2d-display
+PixiJS 6.5.10, © Mat Groves, MIT
+https://github.com/pixijs/pixijs

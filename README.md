@@ -64,18 +64,18 @@ GitHub 入口已关联账号 `seethith`。象棋工具使用腾讯云外部链�
 
 ## 看板娘
 
-右下角为原创插画看板娘，使用约 49 KB 的透明 WebP 和 CSS 轻微呼吸动作，不加载 Live2D/WebGL。桌面人物宽度随正文外侧留白缩放；低于 1280 px 自动收成头像，手机上会给音乐播放器留出空间。点击人物有短暂回应，默认不弹出对白。关闭状态保存在 `buluku-mascot`，可从右上角外观设置重新开启，跨页继续保留；系统减少动态效果时停止动画。
+看板娘使用真正的 Live2D：PixiJS 6 + pixi-live2d-display 0.4，模型是 Live2D 官方 Hiyori Momose。自然眨眼、呼吸、头发物理效果与平滑视线跟随由模型驱动，点击可打招呼。没有角色音效，也不会触发音乐播放。
 
-- 组件：`src/components/Mascot.astro`
-- 网页素材：`public/images/mascot/assistant.webp`
-- 生成方式：内置 imagegen，透明背景；仅做 WebP 转码与缩放，保留透明通道。
+桌面（1200 px 起）为人物预留右侧栏，画布为 224 × 380 px，正文仍使用第一版的组件和排版。关闭后恢复原有正文宽度。窄屏显示右下角按钮，点击才加载并在可收起的对话框中展示，不常驻覆盖正文。关闭状态保存在 `buluku-mascot`，右上角外观设置可以重新开启。
 
-<details>
-<summary>插画生成提示词</summary>
+画布随 Astro 页面切换持久化；关闭、隐藏标签页或收起手机面板时停止渲染，系统减少动态效果时显示静态模型。30 FPS、最高 2 倍像素密度，模型及引擎按需加载，首次正文绘制不等待它们。网络或 WebGL 加载失败会出现重试入口。模型纹理和运行时全部托管在本站，无第三方 CDN 运行时依赖。
 
-Use case: stylized-concept. Asset type: a transparent PNG mascot illustration for the bottom-right corner of a minimal developer personal homepage. Create ONE original anime-inspired chibi young adult female creative coding assistant, full body, approximately 3-head proportions, refined Japanese illustration quality, clean fine linework and gentle cel shading. Short dark navy bob hair with a soft lavender inner highlight, small simple star hair clip, gentle violet eyes, warm calm smile. Modest oversized ivory hoodie with navy cuffs and a tiny blue geometric accent, charcoal pleated skirt over opaque dark leggings, simple light sneakers. Holding a slim closed notebook against her torso with one arm, other hand raised in a small welcoming wave. Front-facing with a slight turn toward the left. Quiet, thoughtful, charming, not a fantasy warrior or game shop character. Palette navy, ivory, muted lavender and a tiny peach highlight. Cohesive readable silhouette at small sizes. Centered vertical composition, entire head/hair/hands/feet visible, narrow silhouette with generous transparent padding on all sides. Actual alpha transparent background. No background scene, no floor, no cast ground shadow, no text, no labels, no speech bubble, no logos, no watermark, no multiple views. Crisp professional web illustration, no glow cloud outside silhouette.
-
-</details>
+- UI 与交互：`src/components/Mascot.astro`、`src/scripts/mascot.ts`
+- 渲染：`src/scripts/live2d-renderer.ts`
+- 样式：`src/styles/global.css` 的 Live2D 段
+- 模型、运行时、来源与授权：`public/live2d/`，见 `NOTICE.txt`
+- 模型来源固定为 CubismWebSamples `4-r.7` 对应提交，仅保留点击动作，默认空闲采用自动眨眼与呼吸，未改人物设计。
+- `pixi-live2d-display` 意外携带其发布工具 `gh-pages` 作为运行依赖，使用 override 固定为修复原型污染且不引入新版 globby 问题的 6.1.1；本站部署仍使用原来的 GitHub Actions。
 
 ## 音乐播放器
 

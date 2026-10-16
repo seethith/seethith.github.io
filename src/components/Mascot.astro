@@ -1,51 +1,35 @@
-<aside class="mascot" aria-label="看板娘" transition:persist="mascot">
-  <p class="mascot-bubble" role="status" hidden></p>
-  <button class="mascot-close" type="button" aria-label="关闭看板娘" title="关闭看板娘，可在外观设置中重新开启">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M7 17 17 7" /></svg>
-  </button>
-  <button class="mascot-character" type="button" aria-label="和看板娘打个招呼" title="打个招呼">
-    <img src="/images/mascot/assistant.webp" alt="" width="512" height="768" loading="lazy" decoding="async" draggable="false" />
-  </button>
+<aside class="mascot" aria-label="看板娘" transition:persist="mascot" data-state="idle">
+  <div class="mascot-desktop-host">
+    <div class="mascot-stage">
+      <p class="mascot-bubble" role="status" hidden></p>
+      <button class="mascot-close" type="button" aria-label="关闭看板娘" title="关闭，可在外观设置中重新开启">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M7 17 17 7" /></svg>
+      </button>
+      <button class="mascot-character" type="button" aria-label="和看板娘打个招呼" title="打个招呼" disabled>
+        <canvas class="mascot-canvas" aria-hidden="true"></canvas>
+      </button>
+      <div class="mascot-loading" role="status">
+        <span class="mascot-loading-text">正在准备看板娘…</span>
+        <button class="mascot-retry" type="button" hidden>重试</button>
+      </div>
+      <a class="mascot-credit" href="/live2d/NOTICE.txt" target="_blank" rel="noopener" title="模型来源与授权">Hiyori · © Live2D Inc.</a>
+    </div>
+  </div>
+  <div class="mascot-compact">
+    <button class="mascot-launcher" type="button" aria-label="展开看板娘" aria-haspopup="dialog">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M8 25V17a12 12 0 0 1 24 0v8M10 21c2-7 7-5 10-11 2 6 7 6 10 10v6c-2 6-6 8-10 8s-8-2-10-8Z"/><path d="M15 23v2m10-2v2m-8 4q3 2 6 0"/></svg>
+    </button>
+    <button class="mascot-close mascot-compact-close" type="button" aria-label="关闭看板娘" title="关闭看板娘">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M7 17 17 7" /></svg>
+    </button>
+  </div>
+  <dialog class="mascot-dialog" aria-labelledby="mascot-dialog-title">
+    <div class="mascot-dialog-header"><span id="mascot-dialog-title">Hiyori</span><button class="mascot-minimize" type="button" aria-label="收起看板娘">收起 ↓</button></div>
+    <div class="mascot-mobile-host"></div>
+  </dialog>
 </aside>
 
 <script>
-  const mascot = document.querySelector<HTMLElement>('.mascot')!;
-  const character = mascot.querySelector<HTMLButtonElement>('.mascot-character')!;
-  const close = mascot.querySelector<HTMLButtonElement>('.mascot-close')!;
-  const bubble = mascot.querySelector<HTMLParagraphElement>('.mascot-bubble')!;
-  const greetings = ['你好呀。', '左边可以听歌 ♪', '慢慢逛。'];
-  let greeting = 0;
-  let timer: ReturnType<typeof setTimeout> | undefined;
-
-  function dismissBubble() {
-    clearTimeout(timer);
-    bubble.hidden = true;
-    bubble.textContent = '';
-    mascot.classList.remove('is-greeting');
-  }
-  character.addEventListener('click', () => {
-    dismissBubble();
-    bubble.textContent = greetings[greeting++ % greetings.length] ?? '你好呀。';
-    bubble.hidden = false;
-    mascot.classList.add('is-greeting');
-    timer = setTimeout(dismissBubble, 3500);
-  });
-  close.addEventListener('click', () => {
-    dismissBubble();
-    window.dispatchEvent(new CustomEvent('mascotchange', { detail: false }));
-    document.querySelector<HTMLElement>('.appearance-toggle')?.focus({ preventScroll: true });
-  });
-  document.addEventListener('keydown', event => {
-    if (event.key === 'Escape') dismissBubble();
-  });
-  document.addEventListener('pointerdown', event => {
-    if (event.target instanceof Node && !mascot.contains(event.target)) dismissBubble();
-  });
-  document.addEventListener('astro:after-swap', dismissBubble);
-  window.addEventListener('appearancechange', () => {
-    if (document.documentElement.dataset.mascot !== 'on') dismissBubble();
-  });
-  const updateActivity = () => { mascot.dataset.paused = String(document.hidden); };
-  document.addEventListener('visibilitychange', updateActivity);
-  updateActivity();
+  import { initMascot } from '../scripts/mascot';
+  initMascot(document.querySelector<HTMLElement>('.mascot')!);
 </script>
