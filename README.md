@@ -62,6 +62,21 @@ GitHub 入口已关联账号 `seethith`。象棋工具使用腾讯云外部链�
 
 外观设置还提供黑白插画、柔光渐变、关闭壁纸三种背景，以及独立的樱花开关。默认使用黑白插画并开启少量樱花；系统要求减少动态效果时停用樱花。关闭壁纸会恢复原先的纯色布局。背景和樱花设置同样在本机保存，并在站内页面间保持一致。樱花由原创 Canvas 路径绘制，无额外动画依赖；装饰层不会拦截点击。
 
+## 看板娘
+
+右下角为原创插画看板娘，使用约 49 KB 的透明 WebP 和 CSS 轻微呼吸动作，不加载 Live2D/WebGL。桌面人物宽度随正文外侧留白缩放；低于 1280 px 自动收成头像，手机上会给音乐播放器留出空间。点击人物有短暂回应，默认不弹出对白。关闭状态保存在 `buluku-mascot`，可从右上角外观设置重新开启，跨页继续保留；系统减少动态效果时停止动画。
+
+- 组件：`src/components/Mascot.astro`
+- 网页素材：`public/images/mascot/assistant.webp`
+- 生成方式：内置 imagegen，透明背景；仅做 WebP 转码与缩放，保留透明通道。
+
+<details>
+<summary>插画生成提示词</summary>
+
+Use case: stylized-concept. Asset type: a transparent PNG mascot illustration for the bottom-right corner of a minimal developer personal homepage. Create ONE original anime-inspired chibi young adult female creative coding assistant, full body, approximately 3-head proportions, refined Japanese illustration quality, clean fine linework and gentle cel shading. Short dark navy bob hair with a soft lavender inner highlight, small simple star hair clip, gentle violet eyes, warm calm smile. Modest oversized ivory hoodie with navy cuffs and a tiny blue geometric accent, charcoal pleated skirt over opaque dark leggings, simple light sneakers. Holding a slim closed notebook against her torso with one arm, other hand raised in a small welcoming wave. Front-facing with a slight turn toward the left. Quiet, thoughtful, charming, not a fantasy warrior or game shop character. Palette navy, ivory, muted lavender and a tiny peach highlight. Cohesive readable silhouette at small sizes. Centered vertical composition, entire head/hair/hands/feet visible, narrow silhouette with generous transparent padding on all sides. Actual alpha transparent background. No background scene, no floor, no cast ground shadow, no text, no labels, no speech bubble, no logos, no watermark, no multiple views. Crisp professional web illustration, no glow cloud outside silhouette.
+
+</details>
+
 ## 音乐播放器
 
 播放器使用原生 `<audio>`，只在点击播放或歌单曲目时加载音源，不自动播放；刷新页面也保持暂停。通过 Astro `ClientRouter` 与持久化 React 组件，站内进入文章、实验页和返回时保留同一个播放器及播放进度。完整刷新、打开新标签页和离开本站不属于连续播放范围。

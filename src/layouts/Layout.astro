@@ -6,6 +6,7 @@ import Atmosphere from '../components/Atmosphere.astro';
 import { ClientRouter } from 'astro:transitions';
 import MusicPlayer from '../components/MusicPlayer';
 import { musicTracks } from '../data/music';
+import Mascot from '../components/Mascot.astro';
 interface Props { title?: string; description?: string }
 const { title = `${profile.name} · 个人主页`, description = profile.intro } = Astro.props;
 ---
@@ -22,6 +23,7 @@ const { title = `${profile.name} · 个人主页`, description = profile.intro }
       (() => {
         let mode = 'system', accent = 'blue', wallpaper = 'ink';
         let sakura = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+        let mascot = true;
         try {
           const savedMode = localStorage.getItem('buluku-color-mode');
           const savedAccent = localStorage.getItem('buluku-accent');
@@ -31,6 +33,7 @@ const { title = `${profile.name} · 个人主页`, description = profile.intro }
           const savedSakura = localStorage.getItem('buluku-sakura');
           if (['ink', 'glow', 'none'].includes(savedWallpaper)) wallpaper = savedWallpaper;
           if (['on', 'off'].includes(savedSakura)) sakura = savedSakura === 'on';
+          mascot = localStorage.getItem('buluku-mascot') !== 'off';
         } catch {}
         const theme = mode === 'system' ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : mode;
         document.documentElement.dataset.mode = mode;
@@ -38,6 +41,7 @@ const { title = `${profile.name} · 个人主页`, description = profile.intro }
         document.documentElement.dataset.accent = accent;
         document.documentElement.dataset.wallpaper = wallpaper;
         document.documentElement.dataset.sakura = sakura ? 'on' : 'off';
+        document.documentElement.dataset.mascot = mascot ? 'on' : 'off';
         document.querySelector('meta[name="theme-color"]').content = theme === 'dark' ? '#14161d' : '#fbfbfc';
       })();
     </script>
@@ -66,5 +70,6 @@ const { title = `${profile.name} · 个人主页`, description = profile.intro }
       </footer>
     </div>
     <MusicPlayer tracks={musicTracks} client:load transition:persist="music-player" />
+    <Mascot />
   </body>
 </html>

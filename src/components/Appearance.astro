@@ -64,6 +64,11 @@ const accents = [
       <span class="setting-switch" aria-hidden="true"></span>
     </label>
     <p class="motion-note">已跟随系统减少动态效果</p>
+    <label class="sakura-option mascot-option">
+      <span class="sakura-option-label"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4 4 8v7a8 8 0 0 0 16 0V8l-3-4-3 3h-4L7 4ZM8 12h.01M16 12h.01M10 16q2 2 4 0" /></svg>看板娘</span>
+      <input type="checkbox" name="mascot" role="switch" />
+      <span class="setting-switch" aria-hidden="true"></span>
+    </label>
   </div>
 </details>
 <script>
@@ -75,6 +80,7 @@ const accents = [
   const accentKey = 'buluku-accent';
   const wallpaperKey = 'buluku-wallpaper';
   const sakuraKey = 'buluku-sakura';
+  const mascotKey = 'buluku-mascot';
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const validMode = (value: string | null | undefined) => ['light', 'dark', 'system'].includes(value ?? '') ? value! : 'system';
   const validAccent = (value: string | null | undefined) => ['blue', 'green', 'purple', 'pink'].includes(value ?? '') ? value! : 'blue';
@@ -83,6 +89,7 @@ const accents = [
   let accent = validAccent(root.dataset.accent);
   let wallpaper = validWallpaper(root.dataset.wallpaper);
   let sakura = root.dataset.sakura === 'on';
+  let mascot = root.dataset.mascot === 'on';
 
   function apply() {
     root.dataset.mode = mode;
@@ -90,10 +97,12 @@ const accents = [
     root.dataset.accent = accent;
     root.dataset.wallpaper = wallpaper;
     root.dataset.sakura = sakura ? 'on' : 'off';
+    root.dataset.mascot = mascot ? 'on' : 'off';
     picker.querySelectorAll<HTMLInputElement>('input').forEach(input => {
       if (input.name === 'color-mode') input.checked = input.value === mode;
       if (input.name === 'accent') input.checked = input.value === accent;
       if (input.name === 'wallpaper') input.checked = input.value === wallpaper;
+      if (input.name === 'mascot') input.checked = mascot;
       if (input.name === 'sakura') {
         input.checked = sakura && !reducedMotion.matches;
         input.disabled = reducedMotion.matches;
@@ -109,23 +118,32 @@ const accents = [
     if (input.name === 'accent') accent = validAccent(input.value);
     if (input.name === 'wallpaper') wallpaper = validWallpaper(input.value);
     if (input.name === 'sakura') sakura = input.checked;
+    if (input.name === 'mascot') mascot = input.checked;
     apply();
     try {
       localStorage.setItem(modeKey, mode);
       localStorage.setItem(accentKey, accent);
       localStorage.setItem(wallpaperKey, wallpaper);
       localStorage.setItem(sakuraKey, sakura ? 'on' : 'off');
+      localStorage.setItem(mascotKey, mascot ? 'on' : 'off');
     } catch { /* The controls still work when browser storage is unavailable. */ }
   });
   system.addEventListener('change', () => { if (mode === 'system') apply(); });
   reducedMotion.addEventListener('change', apply);
   document.addEventListener('astro:after-swap', () => { picker.open = false; apply(); });
+  window.addEventListener('mascotchange', event => {
+    if (!(event instanceof CustomEvent) || typeof event.detail !== 'boolean') return;
+    mascot = event.detail;
+    apply();
+    try { localStorage.setItem(mascotKey, mascot ? 'on' : 'off'); } catch {}
+  });
   window.addEventListener('storage', event => {
     if (event.key === modeKey || event.key === null) mode = validMode(event.newValue);
     if (event.key === accentKey || event.key === null) accent = validAccent(event.newValue);
     if (event.key === wallpaperKey || event.key === null) wallpaper = validWallpaper(event.newValue);
     if (event.key === sakuraKey || event.key === null) sakura = event.newValue === null ? !reducedMotion.matches : event.newValue === 'on';
-    if ([modeKey, accentKey, wallpaperKey, sakuraKey, null].includes(event.key)) apply();
+    if (event.key === mascotKey || event.key === null) mascot = event.newValue !== 'off';
+    if ([modeKey, accentKey, wallpaperKey, sakuraKey, mascotKey, null].includes(event.key)) apply();
   });
   document.addEventListener('pointerdown', event => {
     if (event.target instanceof Node && !picker.contains(event.target)) picker.open = false;
