@@ -64,7 +64,9 @@ GitHub 入口已关联账号 `seethith`。象棋工具使用腾讯云外部链�
 
 ## 看板娘
 
-看板娘使用真正的 Live2D：PixiJS 6 + pixi-live2d-display 0.4，模型是 Live2D 官方 Hiyori Momose。自然眨眼、呼吸、头发物理效果与平滑视线跟随由模型驱动，点击可打招呼。没有角色音效，也不会触发音乐播放。
+看板娘使用真正的 Live2D：PixiJS 6 + pixi-live2d-display 0.4，当前模型“墨色”由用户提供的黑白人物图补绘、拆层并导出为 MOC3。左右眼开合、连续眼皮、瞳孔视线与轻微呼吸由模型驱动，点击可眨眼打招呼。初版保留拿苹果的姿势，只做保守的头身运动，不包含独立口型、手指或发丝物理。没有角色音效，也不会触发音乐播放。
+
+运行模型在 `public/live2d/Ink/`，来源与制作工具见该目录的 `NOTICE.txt`。官方 Hiyori 资产仍保留，后续可切回。墨色模型已使用真实 Web Cubism Core 检查开眼、闭眼、半闭眼及视线变化；没有宣称通过 Cubism Editor 或 VTube Studio 验收。
 
 桌面（1200 px 起）以独立的 fixed 浮层显示在右下角，画布为 224 × 380 px，不占用正文空间。正文始终使用第一版的居中宽度与边距，显示或关闭看板娘均不改变页面排版。窄屏显示右下角按钮，点击才加载并在可收起的对话框中展示；音乐卡片保持固定宽度，不随看板娘开关伸缩。关闭状态保存在 `buluku-mascot`，右上角外观设置可以重新开启。
 
@@ -74,7 +76,7 @@ GitHub 入口已关联账号 `seethith`。象棋工具使用腾讯云外部链�
 - 渲染：`src/scripts/live2d-renderer.ts`
 - 样式：`src/styles/global.css` 的 Live2D 段
 - 模型、运行时、来源与授权：`public/live2d/`，见 `NOTICE.txt`
-- 模型来源固定为 CubismWebSamples `4-r.7` 对应提交，仅保留点击动作，默认空闲采用自动眨眼与呼吸，未改人物设计。
+- 保留的 Hiyori 资产来源固定为 CubismWebSamples `4-r.7` 对应提交；当前墨色模型来源见 `Ink/NOTICE.txt`。默认空闲均采用自动眨眼与呼吸。
 - `pixi-live2d-display` 意外携带其发布工具 `gh-pages` 作为运行依赖，使用 override 固定为修复原型污染且不引入新版 globby 问题的 6.1.1；本站部署仍使用原来的 GitHub Actions。
 
 ## 音乐播放器

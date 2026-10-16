@@ -12,7 +12,7 @@ export async function createLive2D(canvas: HTMLCanvasElement) {
   app.ticker.maxFPS = 30;
   let model: Live2DModel;
   try {
-    model = await Live2DModel.from('/live2d/Hiyori/Hiyori.model3.json', {
+    model = await Live2DModel.from('/live2d/Ink/Ink.model3.json', {
       autoUpdate: false, autoInteract: false, motionPreload: MotionPreloadStrategy.NONE,
     });
   } catch (error) {
@@ -22,7 +22,7 @@ export async function createLive2D(canvas: HTMLCanvasElement) {
   app.stage.addChild(model);
   model.update(0);
   // Fit the actual visible mesh, not the model's padded authoring canvas.
-  // This keeps both hair and feet in view at desktop and dialog aspect ratios.
+  // This keeps the character in view at desktop and dialog aspect ratios.
   const internal = model.internalModel as Cubism4InternalModel;
   let left = Infinity, top = Infinity, right = -Infinity, bottom = -Infinity;
   const matrix = internal.localTransform;

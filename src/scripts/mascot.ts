@@ -120,7 +120,7 @@ export function initMascot(mascot: HTMLElement) {
     const rect = canvas.getBoundingClientRect();
     const clamp = (value: number) => Math.max(-0.7, Math.min(0.7, value));
     renderer.look(clamp((event.clientX - rect.left - rect.width / 2) / (innerWidth * 0.65)),
-      clamp((rect.top + rect.height * 0.2 - event.clientY) / (innerHeight * 0.65)));
+      clamp((rect.top + rect.height * 0.35 - event.clientY) / (innerHeight * 0.65)));
   }, { passive: true });
   document.addEventListener('pointerleave', () => renderer?.look(0, 0));
   document.addEventListener('keydown', event => { if (event.key === 'Escape') dismissBubble(); });

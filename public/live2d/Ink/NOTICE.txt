@@ -1,0 +1,22 @@
+墨色 — 自定义 Live2D 网页看板娘
+
+原始参考：站点所有者提供的 wallhaven-8oj7wk.png。
+原图经内置 image_gen 图像工具补绘为透明人物画稿，并制作闭眼素材。
+原角色与参考作品的权利归各自权利人所有。本说明不授予原画的再分发许可。
+
+模型为实际的 Cubism MOC3，使用本地拆层配方与开源 PSD2Live 工具链导出。
+支持独立左右眼开合、瞳孔视线、轻微呼吸与保守的头身移动。
+当前初版没有独立口型、手指动作或发丝物理。
+
+制作工具：
+https://github.com/Ariakage/live2d-agent-kit
+  commit 94e79e3a94753ae1bd29204d3ed685a3c7b59022
+https://github.com/tsunehimatoi/psd2live
+  commit 5526f2e16b57e5f83d34f33730d6fa26d8bc8695 + Agent Kit patch
+这些工具的源码许可与人物素材的权利分别适用。
+
+网页运行时：Live2D Cubism Core Web、pixi-live2d-display、PixiJS。
+运行时与保留的官方 Hiyori 模型的来源及许可见 /live2d/NOTICE.txt。
+
+已在本站网页使用真实 Cubism Core 验证；没有进行 Cubism Editor、VTube Studio
+或摄像头面捕验收。
