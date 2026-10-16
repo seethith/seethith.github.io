@@ -1,0 +1,24 @@
+{
+  "Version": 3,
+  "FileReferences": {
+    "Moc": "InkV2.moc3",
+    "Textures": [
+      "InkV2.2048/texture_00.png"
+    ],
+    "Physics": "InkV2.physics3.json",
+    "DisplayInfo": "InkV2.cdi3.json",
+    "Motions": {
+      "Idle": []
+    }
+  },
+  "Groups": [
+    {
+      "Target": "Parameter",
+      "Name": "EyeBlink",
+      "Ids": [
+        "ParamEyeLOpen",
+        "ParamEyeROpen"
+      ]
+    }
+  ]
+}

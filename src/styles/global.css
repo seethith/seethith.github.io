@@ -467,7 +467,7 @@ body { padding-bottom:100px; }
 .mascot { position:fixed; right:max(16px,env(safe-area-inset-right)); bottom:calc(18px + env(safe-area-inset-bottom)); width:224px; z-index:20; pointer-events:none; }
 :root:not([data-mascot="on"]) .mascot { display:none; }
 .mascot-stage { position:relative; width:100%; padding-bottom:24px; }
-.mascot-character { display:block; position:relative; width:100%; height:min(380px,calc(100dvh - 150px)); border:0; padding:0; background:none; border-radius:16px; pointer-events:auto; }
+.mascot-character { display:block; position:relative; width:100%; height:min(380px,calc(100dvh - 150px)); border:0; padding:0; background:none; border-radius:16px; pointer-events:none; }
 .mascot-character:disabled { cursor:default; }
 .mascot-canvas { display:block; width:100% !important; height:100% !important; }
 .mascot-close { position:absolute; right:4px; top:0; width:28px; height:28px; display:grid; place-items:center; padding:6px; border:1px solid var(--border); border-radius:50%; color:var(--muted); background:var(--surface); box-shadow:0 2px 8px #1015250a; pointer-events:auto; z-index:2; }
@@ -485,7 +485,7 @@ body { padding-bottom:100px; }
 .mascot-dialog::backdrop { background:#0b10294d; backdrop-filter:blur(3px); }
 .mascot-dialog-header { display:flex; align-items:center; justify-content:space-between; padding-bottom:8px; color:var(--muted); font:12px var(--font-mono); }
 .mascot-minimize { border:0; background:var(--surface-muted); color:var(--muted); border-radius:6px; padding:6px 8px; font:12px var(--font-sans); }
-.mascot-dialog .mascot-character { height:min(380px,calc(100dvh - 160px)); }
+.mascot-dialog .mascot-character { height:min(380px,calc(100dvh - 160px)); pointer-events:auto; }
 .mascot-dialog .mascot-bubble { bottom:auto; top:5px; left:0; right:auto; max-width:180px; z-index:2; }
 @media(max-width:1199px) {
   .mascot { width:56px; bottom:calc(20px + env(safe-area-inset-bottom)); right:max(12px,env(safe-area-inset-right)); }
