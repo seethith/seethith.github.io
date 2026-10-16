@@ -64,9 +64,9 @@ GitHub 入口已关联账号 `seethith`。象棋工具使用腾讯云外部链�
 
 ## 看板娘
 
-看板娘使用真正的 Live2D：PixiJS 6 + pixi-live2d-display 0.4，当前模型“墨色”由用户提供的黑白人物图补绘、拆层并导出为 MOC3。第二次绑定包含 24 个源图层、10 组独立发束；每组通过 Cubism 双段物理链分别控制中段弯曲和发梢摆动。保留拿苹果的姿势，头部与身体独立运动，视线先响应、头部随后转动，停留后慢慢回正。连续眨眼、轻微呼吸、点击点头和歪头由 `mascot-motion.ts` 驱动，不叠加通用模型的眼球弹动。没有独立口型、手指动作或角色音效，也不会触发音乐播放。
+看板娘使用真实 MOC3、Cubism Web Core、PixiJS 6 和 pixi-live2d-display 0.4。当前“墨色”模型补绘了五个头部姿态与三个闭眼版本；大幅转头由 `mascot-views.ts` 选择补绘姿态，在约 90 ms 内过渡。停留时只显示一个姿态，边界带有滞回，避免来回闪动。局部网格负责视线、轻微头部动作、呼吸及四组发梢/发饰物理，脸部被排除在发丝变形范围之外。苹果和手保持前景遮挡。
 
-运行模型在 `public/live2d/InkV2/`，来源与制作工具见该目录的 `NOTICE.txt`；这只是看板娘模型修订，主页仍为第一版。初版 Ink 与官方 Hiyori 资产仍保留。墨色模型使用真实 Web Cubism Core 检查眨眼、视线、侧转与发束物理；不是完整正面到 90° 侧面的重绘模型，也没有宣称通过 Cubism Editor 或 VTube Studio 验收。发布用物理配置由独立制作配方生成，CMO3 编辑时须同步导入该 physics3.json。
+运行模型在 `public/live2d/InkV3/`，使用单张 2048 × 2048 图集。这只是看板娘模型修订，主页仍为第一版。此前的 Ink、InkV2 与官方 Hiyori 资产保留。这里采用多角度二维姿态过渡，能看出姿态切换；不是专业手工绑定的连续大角度模型，也没有实现 90° 纯侧脸、独立口型、手指动作或角色声音。没有宣称通过 Cubism Editor 或 VTube Studio 验收。模型需要 `mascot-motion.ts` 与 `mascot-views.ts` 配合驱动，运行时物理配置见对应 `physics3.json`。键盘聚焦角色后可用方向键转头，Home 回正，回车打招呼；不会触发音乐播放。
 
 桌面（1200 px 起）以独立的 fixed 浮层显示在右下角，画布为 224 × 380 px，不占用正文空间。正文始终使用第一版的居中宽度与边距，显示或关闭看板娘均不改变页面排版。窄屏显示右下角按钮，点击才加载并在可收起的对话框中展示；音乐卡片保持固定宽度，不随看板娘开关伸缩。关闭状态保存在 `buluku-mascot`，右上角外观设置可以重新开启。
 
@@ -76,7 +76,7 @@ GitHub 入口已关联账号 `seethith`。象棋工具使用腾讯云外部链�
 - 渲染：`src/scripts/live2d-renderer.ts`
 - 样式：`src/styles/global.css` 的 Live2D 段
 - 模型、运行时、来源与授权：`public/live2d/`，见 `NOTICE.txt`
-- 保留的 Hiyori 资产来源固定为 CubismWebSamples `4-r.7` 对应提交；当前墨色模型来源见 `InkV2/NOTICE.txt`。关闭、后台与系统减少动态效果时停止渲染循环。
+- 保留的 Hiyori 资产来源固定为 CubismWebSamples `4-r.7` 对应提交；当前墨色模型来源见 `InkV3/NOTICE.txt`。关闭、后台与系统减少动态效果时停止渲染循环。
 - `pixi-live2d-display` 意外携带其发布工具 `gh-pages` 作为运行依赖，使用 override 固定为修复原型污染且不引入新版 globby 问题的 6.1.1；本站部署仍使用原来的 GitHub Actions。
 
 ## 音乐播放器

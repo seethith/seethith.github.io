@@ -104,6 +104,16 @@ export function initMascot(mascot: HTMLElement) {
     timer = setTimeout(dismissBubble, 3500);
   }
   character.addEventListener('click', greet);
+  character.addEventListener('keydown', event => {
+    if (!renderer || reducedMotion.matches || !visible()) return;
+    const directions: Record<string, [number, number]> = {
+      ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 0.7], ArrowDown: [0, -0.7], Home: [0, 0],
+    };
+    const direction = directions[event.key];
+    if (!direction) return;
+    event.preventDefault();
+    renderer.look(...direction);
+  });
   // Desktop artwork lets links/text beneath it receive the click. Only greet on
   // otherwise inactive space; keyboard activation and the mobile dialog still work.
   document.addEventListener('click', event => {
@@ -129,7 +139,9 @@ export function initMascot(mascot: HTMLElement) {
     if (!renderer || !visible() || reducedMotion.matches || event.pointerType === 'touch') return;
     const rect = canvas.getBoundingClientRect();
     const clamp = (value: number) => Math.max(-1, Math.min(1, value));
-    renderer.look(clamp((event.clientX - rect.left - rect.width / 2) / (innerWidth * 0.55)),
+    const center = rect.left + rect.width / 2;
+    const reach = event.clientX < center ? Math.max(center * 0.75, 240) : Math.max(innerWidth - center, 80);
+    renderer.look(clamp((event.clientX - center) / reach),
       clamp((rect.top + rect.height * 0.35 - event.clientY) / (innerHeight * 0.65)));
   }, { passive: true });
   document.addEventListener('pointerleave', () => renderer?.look(0, 0));

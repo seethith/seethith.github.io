@@ -1,6 +1,7 @@
 import { Application } from 'pixi.js';
 import { config, Live2DModel, MotionPreloadStrategy, type Cubism4InternalModel } from 'pixi-live2d-display/cubism4';
 import { createMascotMotion } from './mascot-motion';
+import { createMascotViews } from './mascot-views';
 
 // Loaded dynamically, after the locally hosted Cubism Core is ready.
 export async function createLive2D(canvas: HTMLCanvasElement) {
@@ -13,7 +14,7 @@ export async function createLive2D(canvas: HTMLCanvasElement) {
   app.ticker.maxFPS = 30;
   let model: Live2DModel;
   try {
-    model = await Live2DModel.from('/live2d/InkV2/InkV2.model3.json', {
+    model = await Live2DModel.from('/live2d/InkV3/InkV3.model3.json', {
       autoUpdate: false, autoInteract: false, motionPreload: MotionPreloadStrategy.NONE,
     });
   } catch (error) {
@@ -26,12 +27,14 @@ export async function createLive2D(canvas: HTMLCanvasElement) {
   // This keeps the character in view at desktop and dialog aspect ratios.
   const internal = model.internalModel as Cubism4InternalModel;
   const motion = createMascotMotion();
+  const views = createMascotViews();
   let frameSeconds = 0;
   // Run our pose before Cubism physics, so each hair chain reacts to head acceleration.
   // Replace the generic focus/breath drivers rather than adding competing transforms.
   internal.eyeBlink = undefined;
   internal.updateFocus = () => {
-    for (const [id, value] of Object.entries(motion.update(frameSeconds))) {
+    const pose = motion.update(frameSeconds);
+    for (const [id, value] of Object.entries({ ...pose, ...views.update(pose.ParamAngleX, frameSeconds) })) {
       internal.coreModel.setParameterValueById(id, value);
     }
   };

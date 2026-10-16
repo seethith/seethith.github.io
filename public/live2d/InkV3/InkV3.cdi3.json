@@ -1,0 +1,177 @@
+{
+	"Version": 3,
+	"Parameters": [
+		{
+			"Id": "ParamAngleX",
+			"GroupId": "",
+			"Name": "ParamAngleX"
+		},
+		{
+			"Id": "ParamEyeLOpen",
+			"GroupId": "",
+			"Name": "ParamEyeLOpen"
+		},
+		{
+			"Id": "ParamEyeROpen",
+			"GroupId": "",
+			"Name": "ParamEyeROpen"
+		},
+		{
+			"Id": "ParamAngleY",
+			"GroupId": "",
+			"Name": "ParamAngleY"
+		},
+		{
+			"Id": "ParamAngleZ",
+			"GroupId": "",
+			"Name": "ParamAngleZ"
+		},
+		{
+			"Id": "ParamBodyAngleX",
+			"GroupId": "",
+			"Name": "ParamBodyAngleX"
+		},
+		{
+			"Id": "ParamBodyAngleY",
+			"GroupId": "",
+			"Name": "ParamBodyAngleY"
+		},
+		{
+			"Id": "ParamBodyAngleZ",
+			"GroupId": "",
+			"Name": "ParamBodyAngleZ"
+		},
+		{
+			"Id": "ParamEyeBallX",
+			"GroupId": "",
+			"Name": "ParamEyeBallX"
+		},
+		{
+			"Id": "ParamEyeBallY",
+			"GroupId": "",
+			"Name": "ParamEyeBallY"
+		},
+		{
+			"Id": "ParamBreath",
+			"GroupId": "",
+			"Name": "ParamBreath"
+		},
+		{
+			"Id": "ParamHairLeft",
+			"GroupId": "",
+			"Name": "ParamHairLeft"
+		},
+		{
+			"Id": "ParamHairRight",
+			"GroupId": "",
+			"Name": "ParamHairRight"
+		},
+		{
+			"Id": "ParamHairBack",
+			"GroupId": "",
+			"Name": "ParamHairBack"
+		},
+		{
+			"Id": "ParamBow",
+			"GroupId": "",
+			"Name": "ParamBow"
+		},
+		{
+			"Id": "ParamView0",
+			"GroupId": "",
+			"Name": "ParamView0"
+		},
+		{
+			"Id": "ParamView1",
+			"GroupId": "",
+			"Name": "ParamView1"
+		},
+		{
+			"Id": "ParamView2",
+			"GroupId": "",
+			"Name": "ParamView2"
+		},
+		{
+			"Id": "ParamView3",
+			"GroupId": "",
+			"Name": "ParamView3"
+		},
+		{
+			"Id": "ParamView4",
+			"GroupId": "",
+			"Name": "ParamView4"
+		}
+	],
+	"ParameterGroups": [],
+	"Parts": [],
+	"Drawables": [
+		{
+			"Id": "body",
+			"Name": "body"
+		},
+		{
+			"Id": "hand",
+			"Name": "hand"
+		},
+		{
+			"Id": "Head_profile",
+			"Name": "Head_profile"
+		},
+		{
+			"Id": "Lid_profile_0",
+			"Name": "Lid_profile_0"
+		},
+		{
+			"Id": "Lid_profile_1",
+			"Name": "Lid_profile_1"
+		},
+		{
+			"Id": "Head_side-quarter",
+			"Name": "Head_side-quarter"
+		},
+		{
+			"Id": "Lid_side-quarter_0",
+			"Name": "Lid_side-quarter_0"
+		},
+		{
+			"Id": "Lid_side-quarter_1",
+			"Name": "Lid_side-quarter_1"
+		},
+		{
+			"Id": "Head_neutral",
+			"Name": "Head_neutral"
+		},
+		{
+			"Id": "Lid_neutral_0",
+			"Name": "Lid_neutral_0"
+		},
+		{
+			"Id": "Lid_neutral_1",
+			"Name": "Lid_neutral_1"
+		},
+		{
+			"Id": "Head_front-quarter",
+			"Name": "Head_front-quarter"
+		},
+		{
+			"Id": "Lid_front-quarter_0",
+			"Name": "Lid_front-quarter_0"
+		},
+		{
+			"Id": "Lid_front-quarter_1",
+			"Name": "Lid_front-quarter_1"
+		},
+		{
+			"Id": "Head_front",
+			"Name": "Head_front"
+		},
+		{
+			"Id": "Lid_front_0",
+			"Name": "Lid_front_0"
+		},
+		{
+			"Id": "Lid_front_1",
+			"Name": "Lid_front_1"
+		}
+	]
+}
