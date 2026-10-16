@@ -458,12 +458,12 @@ body { padding-bottom:100px; }
 .music-empty { text-align:center; padding:24px 0; }
 .music-error { color:var(--accent); }
 @media(max-width:760px) {
-  .music-player { left:max(12px,env(safe-area-inset-left)); bottom:calc(12px + env(safe-area-inset-bottom)); width:min(274px,calc(100vw - 40px)); }
+  .music-player { left:max(12px,env(safe-area-inset-left)); bottom:calc(12px + env(safe-area-inset-bottom)); width:min(274px,calc(100vw - 100px)); }
   .music-panel { max-width:calc(100vw - 40px); }
 }
 @media(prefers-reduced-motion:reduce) { .music-equalizer i { animation:none; } }
 
-/* Live2D lives in a reserved desktop rail; narrow screens use an opt-in dialog. */
+/* Live2D is a fixed overlay. Toggling it never changes the underlying layout. */
 .mascot { position:fixed; right:max(16px,env(safe-area-inset-right)); bottom:calc(18px + env(safe-area-inset-bottom)); width:224px; z-index:20; pointer-events:none; }
 :root:not([data-mascot="on"]) .mascot { display:none; }
 .mascot-stage { position:relative; width:100%; padding-bottom:24px; }
@@ -487,9 +487,6 @@ body { padding-bottom:100px; }
 .mascot-minimize { border:0; background:var(--surface-muted); color:var(--muted); border-radius:6px; padding:6px 8px; font:12px var(--font-sans); }
 .mascot-dialog .mascot-character { height:min(380px,calc(100dvh - 160px)); }
 .mascot-dialog .mascot-bubble { bottom:auto; top:5px; left:0; right:auto; max-width:180px; z-index:2; }
-@media(min-width:1200px) {
-  :root[data-mascot="on"] .site-shell { width:min(1120px,calc(100% - 320px)); margin-left:max(48px,calc((100% - 1400px)/2)); margin-right:0; }
-}
 @media(max-width:1199px) {
   .mascot { width:56px; bottom:calc(20px + env(safe-area-inset-bottom)); right:max(12px,env(safe-area-inset-right)); }
   .mascot-desktop-host { display:none; }
@@ -498,7 +495,4 @@ body { padding-bottom:100px; }
   .mascot-launcher svg { width:34px; height:34px; stroke:currentColor; stroke-width:1.4; fill:none; stroke-linecap:round; stroke-linejoin:round; }
   .mascot-launcher:hover { background:var(--accent-soft); }
   .mascot-compact-close { width:24px; height:24px; right:-4px; top:-13px; padding:5px; }
-}
-@media(max-width:760px) {
-  :root[data-mascot="on"] .music-player { width:min(274px,calc(100vw - 100px)); }
 }
