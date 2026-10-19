@@ -64,9 +64,9 @@ GitHub 入口已关联账号 `seethith`。象棋工具使用腾讯云外部链�
 
 ## 看板娘
 
-看板娘使用真实 MOC3、Cubism Web Core、PixiJS 6 和 pixi-live2d-display 0.4。当前“墨色”模型由同一套头部网格连续转动，已移除五张头部图片的选择与透明度过渡。头部包含独立脸底、双眼、鼻、嘴、头发和颈部覆盖层；保留正面画稿中的五官，只补绘遮挡下的皮肤。眼睛开合、视线与转头联合绑定，头发根部与脸缘共用坐标框架，发梢和发饰接受四组物理反馈。苹果和手保持前景遮挡。
+看板娘使用 Live2D 官方公开模型 Hiyori Momose（百瀬ひより），通过 Cubism Web Core、PixiJS 6 和 pixi-live2d-display 0.4 渲染。模型保存在 `public/live2d/Hiyori/`，使用原有的转头、眨眼和头发物理；点击角色播放模型自带动作。自制墨色／灵梦模型及其专用参数驱动已从网站移除。
 
-运行模型在 `public/live2d/InkV4/`，使用单张 2048 × 2048 图集、9 个绘制网格及 15 个参数。这只是看板娘模型修订，主页仍为第一版，历史模型资产保留。可从正面连续转到侧前方；参数的 ±35 是模型驱动范围，不代表测量得到的真实空间角度。尚未实现 90° 纯侧脸、独立口型、手指动作或角色声音，也没有经过 Cubism Editor 或 VTube Studio 验收。`mascot-motion.ts` 驱动连续参数，物理配置见对应 `physics3.json`。键盘聚焦角色后可用方向键转头，Home 回正，回车打招呼；不会触发音乐播放。
+键盘聚焦角色后可用方向键转头，Home 回正，回车打招呼；不会触发音乐播放。
 
 桌面（1200 px 起）以独立的 fixed 浮层显示在右下角，画布为 224 × 380 px，不占用正文空间。正文始终使用第一版的居中宽度与边距，显示或关闭看板娘均不改变页面排版。窄屏显示右下角按钮，点击才加载并在可收起的对话框中展示；音乐卡片保持固定宽度，不随看板娘开关伸缩。关闭状态保存在 `buluku-mascot`，右上角外观设置可以重新开启。
 
@@ -76,7 +76,7 @@ GitHub 入口已关联账号 `seethith`。象棋工具使用腾讯云外部链�
 - 渲染：`src/scripts/live2d-renderer.ts`
 - 样式：`src/styles/global.css` 的 Live2D 段
 - 模型、运行时、来源与授权：`public/live2d/`，见 `NOTICE.txt`
-- 保留的 Hiyori 资产来源固定为 CubismWebSamples `4-r.7` 对应提交；当前墨色模型来源见 `InkV4/NOTICE.txt`。关闭、后台与系统减少动态效果时停止渲染循环。
+- Hiyori 资产来源固定为 CubismWebSamples `4-r.7` 对应提交，出处及许可链接见 `public/live2d/NOTICE.txt`。
 - `pixi-live2d-display` 意外携带其发布工具 `gh-pages` 作为运行依赖，使用 override 固定为修复原型污染且不引入新版 globby 问题的 6.1.1；本站部署仍使用原来的 GitHub Actions。
 
 ## 音乐播放器

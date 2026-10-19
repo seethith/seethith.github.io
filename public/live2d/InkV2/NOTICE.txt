@@ -1,7 +1,0 @@
-墨色 · Live2D 第二次绑定（2026-10-16）
-原图由站点作者提供。保留原图黑白人物、服饰及苹果姿态；隐藏头部和颈部补画使用内置 image_gen。
-24 个源图层，10 组独立发束，每组中段弯曲与发梢摆动由双段 Cubism 物理链驱动。
-模型由 live2d-agent-kit / psd2live 导出真实 MOC3，网站使用本地 Cubism Web Core 与 pixi-live2d-display。
-Kit 94e79e3a94753ae1bd29204d3ed685a3c7b59022 / engine 5526f2e16b57e5f83d34f33730d6fa26d8bc8695。
-源图仍归原权利人所有；本站展示不代表将原画授权为可任意复用的公共素材。
-模型只针对网页伴随角色验证；不是全角度三维模型。运行时物理是专门调校版本，源 CMO3 的默认物理需要同步导入 runtime/InkV2.physics3.json。
