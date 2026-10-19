@@ -11,31 +11,32 @@ const articles = await getArticles();
 <Layout>
   <section class="hero" aria-labelledby="hero-title">
     <div class="hero-copy">
-      <h1 id="hero-title">你好，我是<br /><span class="curiosity-word">{profile.name}<span class="word-underline" aria-hidden="true"></span></span><span class="blue-period">.</span></h1>
-      <p class="hero-description">{profile.intro}</p>
-      <div class="hero-actions flex flex-wrap items-center gap-4"><a href="#playground" class="primary-button">看看小工具 <span aria-hidden="true">↓</span></a><a href="#articles" class="quiet-link">文章 <span aria-hidden="true">↗</span></a></div>
+      <p class="hero-overline mono" data-reveal><span class="overline-dot" aria-hidden="true"></span>PERSONAL SPACE</p>
+      <h1 id="hero-title"><span class="title-mask"><span class="hero-greeting" data-reveal="title">你好，我是</span></span><span class="title-mask"><span class="hero-name" data-reveal="title" data-delay="90">{profile.name}<span class="blue-period">.</span></span></span></h1>
+      <p class="hero-description" data-reveal data-delay="180">{profile.intro}</p>
+      <div class="hero-actions flex flex-wrap items-center gap-4" data-reveal data-delay="240"><a href="#playground" class="primary-button">看看小工具 <span class="button-arrow" aria-hidden="true">↗</span></a><a href="#articles" class="quiet-link">读点文章 <span aria-hidden="true">↗</span></a></div>
     </div>
-    <div class="hero-experiment">
-      <div class="experiment-frame"><RippleField client:load /></div>
+    <div class="hero-experiment" data-reveal data-delay="120">
+      <div class="experiment-frame" data-surface><RippleField client:load /><span class="frame-corner frame-corner-tl" aria-hidden="true"></span><span class="frame-corner frame-corner-br" aria-hidden="true"></span></div>
       <div class="experiment-caption"><a href="/lab/ripple/" aria-label="展开像素潮汐">展开 <span class="expand-icon" aria-hidden="true">⤢</span></a></div>
     </div>
   </section>
 
   <section id="playground" class="playground-section" aria-labelledby="playground-title">
-    <div class="section-heading"><h2 id="playground-title">小工具<span class="count-badge mono">03</span></h2></div>
+    <div class="section-heading" data-reveal><h2 id="playground-title">小工具<span class="count-badge mono">03</span></h2><span class="section-caption mono" aria-hidden="true">PLAYGROUND / 01</span></div>
     <div class="project-grid">
-      <a class="project-card chess-project" href={xiangqi.url} target="_blank" rel="noopener noreferrer" aria-label="打开象棋工具（新标签页）">
+      <a class="project-card chess-project" href={xiangqi.url} target="_blank" rel="noopener noreferrer" aria-label="打开象棋工具（新标签页）" data-reveal data-surface>
         <div class="chess-thumbnail" aria-hidden="true">
           <svg class="chess-board" viewBox="0 0 260 168" fill="none"><path d="M34 20H226M34 52H226M34 84H226M34 116H226M34 148H226M34 20V148M66 20V148M98 20V148M130 20V148M162 20V148M194 20V148M226 20V148M98 20L162 84M162 20L98 84" /></svg>
           <span class="chess-piece chess-red">帥</span><span class="chess-piece chess-black">馬</span>
         </div>
         <div class="project-info"><h3>{xiangqi.title}<span class="expand-icon" aria-hidden="true">↗</span></h3><p>摆棋盘，分析下一步。</p></div>
       </a>
-      <article id="palette" class="project-card palette-card">
+      <article id="palette" class="project-card palette-card" data-reveal data-delay="70" data-surface>
         <PalettePlay client:visible />
         <div class="project-info"><h3>配色工具</h3><p>5 组预设配色。</p></div>
       </article>
-      <a class="project-card ripple-project" href="/lab/ripple/" aria-label="打开像素潮汐">
+      <a class="project-card ripple-project" href="/lab/ripple/" aria-label="打开像素潮汐" data-reveal data-delay="140" data-surface>
         <div class="ripple-thumbnail" aria-hidden="true"><div class="contour contour-one"></div><div class="contour contour-two"></div><div class="contour contour-three"></div><div class="contour contour-four"></div><span class="center-plus">+</span></div>
         <div class="project-info"><h3>像素潮汐<span class="expand-icon" aria-hidden="true">↗</span></h3><p>点击点阵，产生涟漪。</p></div>
       </a>
@@ -43,7 +44,7 @@ const articles = await getArticles();
   </section>
 
   <section id="articles" class="articles-section" aria-labelledby="articles-title">
-    <div class="section-heading flex items-center justify-between gap-4"><h2 id="articles-title">文章</h2><a href="/articles/" class="section-more">全部文章 <span aria-hidden="true">↗</span></a></div>
+    <div class="section-heading flex items-center justify-between gap-4" data-reveal><h2 id="articles-title">文章</h2><a href="/articles/" class="section-more">全部文章 <span aria-hidden="true">↗</span></a></div>
     <ArticleList articles={articles.slice(0, 3)} />
   </section>
   <Elsewhere />

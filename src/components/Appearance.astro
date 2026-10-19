@@ -108,7 +108,7 @@ const accents = [
         input.disabled = reducedMotion.matches;
       }
     });
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', root.dataset.theme === 'dark' ? '#14161d' : '#fbfbfc');
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', root.dataset.theme === 'dark' ? '#111315' : '#f7f7f4');
     window.dispatchEvent(new Event('appearancechange'));
   }
   picker.addEventListener('change', event => {

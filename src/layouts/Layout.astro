@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import '../styles/refinement.css';
 import { profile } from '../data/site';
 import Appearance from '../components/Appearance.astro';
 import Atmosphere from '../components/Atmosphere.astro';
@@ -16,7 +17,7 @@ const { title = `${profile.name} · 个人主页`, description = profile.intro }
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#fbfbfc" />
+    <meta name="theme-color" content="#f7f7f4" />
     <ClientRouter fallback="swap" />
     <script is:inline>
       // Restore before first paint, including when returning from another page.
@@ -42,7 +43,7 @@ const { title = `${profile.name} · 个人主页`, description = profile.intro }
         document.documentElement.dataset.wallpaper = wallpaper;
         document.documentElement.dataset.sakura = sakura ? 'on' : 'off';
         document.documentElement.dataset.mascot = mascot ? 'on' : 'off';
-        document.querySelector('meta[name="theme-color"]').content = theme === 'dark' ? '#14161d' : '#fbfbfc';
+        document.querySelector('meta[name="theme-color"]').content = theme === 'dark' ? '#111315' : '#f7f7f4';
       })();
     </script>
     <meta property="og:title" content={title} />
@@ -71,5 +72,11 @@ const { title = `${profile.name} · 个人主页`, description = profile.intro }
     </div>
     <MusicPlayer tracks={musicTracks} client:load transition:persist="music-player" />
     <Mascot />
+    <script>
+      import { initPageMotion, disposePageMotion } from '../scripts/page-motion';
+      initPageMotion();
+      document.addEventListener('astro:page-load', initPageMotion);
+      document.addEventListener('astro:before-swap', disposePageMotion);
+    </script>
   </body>
 </html>
