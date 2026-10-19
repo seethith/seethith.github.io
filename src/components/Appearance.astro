@@ -5,7 +5,7 @@ const modes = [
   { value: 'system', label: '系统', path: 'M4 4h16v12H4zM8 20h8m-4-4v4' },
 ] as const;
 const accents = [
-  { value: 'blue', label: '蓝色', color: '#4568eb' },
+  { value: 'blue', label: '蓝色', color: '#4567a6' },
   { value: 'green', label: '青绿', color: '#328b71' },
   { value: 'purple', label: '紫色', color: '#9467d9' },
   { value: 'pink', label: '樱粉', color: '#cb719a' },
@@ -42,7 +42,12 @@ const accents = [
       <legend>背景</legend>
       <div class="wallpaper-options">
         <label class="wallpaper-option">
-          <input type="radio" name="wallpaper" value="ink" checked />
+          <input type="radio" name="wallpaper" value="dusk" checked />
+          <span class="wallpaper-sample wallpaper-sample-dusk" aria-hidden="true"></span>
+          <span>暮色天空</span>
+        </label>
+        <label class="wallpaper-option">
+          <input type="radio" name="wallpaper" value="ink" />
           <span class="wallpaper-sample wallpaper-sample-ink" aria-hidden="true"></span>
           <span>黑白插画</span>
         </label>
@@ -84,7 +89,7 @@ const accents = [
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const validMode = (value: string | null | undefined) => ['light', 'dark', 'system'].includes(value ?? '') ? value! : 'system';
   const validAccent = (value: string | null | undefined) => ['blue', 'green', 'purple', 'pink'].includes(value ?? '') ? value! : 'blue';
-  const validWallpaper = (value: string | null | undefined) => ['ink', 'glow', 'none'].includes(value ?? '') ? value! : 'ink';
+  const validWallpaper = (value: string | null | undefined) => ['dusk', 'ink', 'glow', 'none'].includes(value ?? '') ? value! : 'dusk';
   let mode = validMode(root.dataset.mode);
   let accent = validAccent(root.dataset.accent);
   let wallpaper = validWallpaper(root.dataset.wallpaper);
@@ -108,7 +113,7 @@ const accents = [
         input.disabled = reducedMotion.matches;
       }
     });
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', root.dataset.theme === 'dark' ? '#111315' : '#f7f7f4');
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', root.dataset.theme === 'dark' ? '#121621' : '#f5f3ee');
     window.dispatchEvent(new Event('appearancechange'));
   }
   picker.addEventListener('change', event => {

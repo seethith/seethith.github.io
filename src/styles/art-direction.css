@@ -1,0 +1,137 @@
+/* One visual system: warm paper by day, blue ink at night, quiet painted light. */
+@font-face {
+  font-family:'Manrope';
+  src:url('/fonts/manrope-latin-variable.woff') format('woff');
+  font-style:normal; font-weight:200 800; font-display:swap;
+}
+:root {
+  --paper:#f5f3ee; --surface:#fffefa; --surface-muted:#eae9e5; --surface-raised:#f1f0eb;
+  --ink:#272d39; --muted:#626976; --subtle:#727986; --border:#dcdedc;
+  --display-font:'Manrope',-apple-system,BlinkMacSystemFont,sans-serif;
+}
+:root[data-theme='dark'] {
+  --paper:#121621; --surface:#1b212e; --surface-muted:#242c3b; --surface-raised:#293244;
+  --ink:#eeeee9; --muted:#aab4c5; --subtle:#94a1b6; --border:#333f53;
+}
+:root[data-accent='blue'] { --accent:#4567a6; --accent-rgb:69,103,166; }
+:root[data-theme='dark'][data-accent='blue'] { --accent:#a5bce8; --accent-rgb:165,188,232; }
+.brand,.brand-mark,.hero-name { font-family:var(--display-font); }
+.brand { font-weight:650; letter-spacing:-.75px; }
+.brand-mark { font-weight:650; padding-bottom:2px; border-radius:10px; }
+.hero-name { font-weight:560; letter-spacing:-.075em; line-height:1.19; }
+.hero-greeting { font-size:clamp(24px,2.5vw,32px); font-weight:400; letter-spacing:.01em; }
+.hero-overline { font-size:9px; letter-spacing:2.5px; }
+.hero-description { color:var(--muted); }
+.blue-period { color:var(--accent); }
+.section-heading h2 { font-weight:450; letter-spacing:-.045em; }
+.section-caption,.experiment-edition { font-size:9px; letter-spacing:1.2px; }
+.experiment-caption { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.experiment-edition { color:var(--muted); }
+
+/* Keep both color treatments mounted so the existing appearance crossfade stays continuous. */
+.wallpaper-dusk { background-image:url('/images/wallpapers/dusk.webp'); background-position:58% center; }
+.wallpaper-dusk::before,.wallpaper-dusk::after { content:''; position:absolute; inset:0; transition:opacity .55s ease; }
+.wallpaper-dusk::before {
+  background:linear-gradient(90deg,#f5f3eef2 0%,#f5f3eed4 35%,#f5f3ee70 75%,#f5f3ee45),linear-gradient(180deg,#f5f3ee15 35%,#f5f3eeb5);
+}
+.wallpaper-dusk::after {
+  background:linear-gradient(90deg,#121621ed 0%,#121621cc 35%,#12162158 78%,#12162145),linear-gradient(180deg,#12162138 0%,transparent 45%,#121621ac);
+  opacity:0;
+}
+:root[data-theme='dark'] .wallpaper-dusk::before { opacity:0; }
+:root[data-theme='dark'] .wallpaper-dusk::after { opacity:1; }
+:root[data-wallpaper='dusk'] .wallpaper-dusk { opacity:1; }
+.wallpaper-sample-dusk { background:#7286a8 url('/images/wallpapers/dusk-thumb.webp') center 45%/cover; }
+.wallpaper-options { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.wallpaper-sample { height:48px; }
+body { position:relative; min-height:100dvh; }
+.page-atmosphere-wash {
+  position:absolute; inset:0; z-index:0; pointer-events:none; opacity:0;
+  background:linear-gradient(180deg,transparent 0,transparent 380px,color-mix(in srgb,var(--paper) 84%,transparent) 760px,var(--paper) 1100px);
+  transition:opacity .65s ease;
+}
+:root[data-wallpaper='dusk'] .page-atmosphere-wash { opacity:1; }
+:root[data-wallpaper='dusk'] .site-shell::before { background:none; }
+.appearance-panel { background:color-mix(in srgb,var(--surface) 96%,transparent); }
+.site-header[data-scrolled] { background:color-mix(in srgb,var(--paper) 88%,transparent); -webkit-backdrop-filter:blur(18px); backdrop-filter:blur(18px); }
+.appearance-toggle { box-shadow:inset 0 1px 0 #ffffff26; }
+
+/* A thin lit rim gives the interactive surface a little depth without framing every section. */
+.experiment-frame {
+  border-color:color-mix(in srgb,var(--surface) 70%,var(--border));
+  box-shadow:0 25px 65px #283b5510,0 1px 0 #fff8 inset,0 -1px 0 #ffffff20 inset;
+  overflow:hidden;
+}
+:root[data-wallpaper] .experiment-frame {
+  background:linear-gradient(135deg,color-mix(in srgb,var(--surface) 83%,transparent),color-mix(in srgb,var(--surface-muted) 57%,transparent));
+  -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px);
+}
+:root[data-theme='dark'] .experiment-frame {
+  border-color:#b7c6e52b;
+  box-shadow:0 25px 65px #060b1826,0 1px 0 #eef3ff1c inset,0 -1px 0 #ffffff08 inset;
+}
+.experiment-frame::after { opacity:.13; background-size:48px 48px; }
+.frame-corner { opacity:.3; }
+.live-label { border-color:color-mix(in srgb,var(--accent) 25%,transparent); }
+.primary-button { font-weight:500; }
+.primary-button .button-arrow { border-color:color-mix(in srgb,currentColor 40%,transparent); }
+
+/* Three small art studies, held by the same inset, index and caption baseline. */
+.project-card { padding:12px; gap:0; border-radius:21px; }
+.project-card .project-info { padding:22px 12px 13px; border:0; }
+.project-info h3 { font-weight:500; margin-bottom:7px; }
+.project-info p { color:var(--muted); }
+.chess-thumbnail,.palette-art,.ripple-thumbnail {
+  position:relative; height:210px; margin:0; border-radius:12px; overflow:hidden;
+  border:1px solid color-mix(in srgb,var(--ink) 5%,transparent);
+}
+.art-index { position:absolute; top:14px; left:15px; z-index:2; font-size:9px; letter-spacing:1px; color:var(--muted); }
+.chess-thumbnail { background:radial-gradient(ellipse at 30% 15%,#fdf7e9,#e8e3d8 85%); }
+.chess-board { opacity:.45; transform:perspective(550px) rotateX(34deg) rotateZ(-17deg) scale(1.05); }
+.chess-piece { border-width:1px; outline-width:4px; box-shadow:0 12px 16px #46392320,0 -3px 0 #b5a58740 inset,0 1px 0 #fff9 inset; }
+.chess-red { color:#a04a42; }
+.palette-art { background:radial-gradient(ellipse at 75% 20%,#f7ebdf,#e9e6ed); }
+.palette-play { min-height:0; margin:0; padding:43px 18px 0; }
+.palette-swatches { height:111px; gap:4px; transform:perspective(700px) rotateX(7deg) rotateZ(-5deg); }
+.palette-swatches button { border-radius:5px; box-shadow:0 8px 13px #35314418,0 1px 0 #ffffff50 inset; }
+.palette-caption { margin-top:11px; font-size:10px; }
+.palette-feedback { margin-top:0; min-height:12px; font-size:9px; }
+.ripple-thumbnail { background:radial-gradient(ellipse at 65% 20%,#e9f0f7,#e2e6ed 88%); }
+.ripple-thumbnail::before { content:''; position:absolute; inset:0; opacity:.3; background-image:radial-gradient(var(--muted) .6px,transparent .6px); background-size:12px 12px; mask-image:radial-gradient(ellipse,#000,transparent 72%); }
+.contour { border-color:color-mix(in srgb,var(--accent) 42%,transparent); width:196px; height:133px; box-shadow:0 7px 10px color-mix(in srgb,var(--accent) 6%,transparent); }
+.contour-two { width:161px; height:108px; }.contour-three { width:126px; height:83px; }.contour-four { width:90px; height:58px; }
+:root[data-theme='dark'] .chess-thumbnail { background:radial-gradient(ellipse at 30% 15%,#393c3d,#252b32); }
+:root[data-theme='dark'] .chess-piece { background:#353b3e; outline-color:#353b3e; }
+:root[data-theme='dark'] .chess-red { color:#e1a18c; }
+:root[data-theme='dark'] .palette-art { background:radial-gradient(ellipse at 75% 20%,#3c3540,#252c3d); }
+:root[data-theme='dark'] .ripple-thumbnail { background:radial-gradient(ellipse at 65% 20%,#34455f,#252d40); }
+.directory-card { border-radius:17px; }
+.directory-icon { background:linear-gradient(145deg,var(--surface),var(--surface-muted)); box-shadow:0 1px 0 #ffffff25 inset; }
+.articles-empty { background:linear-gradient(120deg,color-mix(in srgb,var(--surface) 80%,transparent),color-mix(in srgb,var(--surface) 30%,transparent)); }
+.music-mini { border-color:color-mix(in srgb,var(--ink) 13%,transparent); }
+
+@media(max-width:1024px) and (min-width:761px) {
+  .chess-thumbnail,.palette-art,.ripple-thumbnail { height:190px; }
+  .palette-play { padding:36px 12px 0; }
+  .palette-swatches { height:99px; }
+  .project-card .project-info { padding:20px 7px 12px; }
+}
+@media(max-width:760px) {
+  .hero-greeting { font-size:25px; }
+  .hero-name { letter-spacing:-.075em; }
+  .hero-overline { font-size:9px; }
+  .wallpaper-dusk { background-image:url('/images/wallpapers/dusk-small.webp'); background-position:68% center; }
+  .wallpaper-dusk::before { background:linear-gradient(180deg,#f5f3eed6,#f5f3ee9c 45%,#f5f3eec9); }
+  .wallpaper-dusk::after { background:linear-gradient(180deg,#121621d1,#12162189 45%,#121621c4); }
+  .page-atmosphere-wash { background:linear-gradient(180deg,transparent 450px,color-mix(in srgb,var(--paper) 80%,transparent) 950px,var(--paper) 1300px); }
+  .experiment-edition { font-size:8px; letter-spacing:.7px; }
+  .project-card { padding:10px; }
+  .project-card .project-info { padding:20px 10px 12px; }
+}
+@media(max-width:360px) {
+  .hero-name { font-size:76px; }
+  .hero-actions { gap:20px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .wallpaper-dusk::before,.wallpaper-dusk::after,.page-atmosphere-wash { transition:none; }
+}

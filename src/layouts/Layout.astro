@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import '../styles/refinement.css';
 import '../styles/continuity.css';
+import '../styles/art-direction.css';
 import { profile } from '../data/site';
 import Appearance from '../components/Appearance.astro';
 import Atmosphere from '../components/Atmosphere.astro';
@@ -13,17 +14,18 @@ interface Props { title?: string; description?: string }
 const { title = `${profile.name} · 个人主页`, description = profile.intro } = Astro.props;
 ---
 <!doctype html>
-<html lang="zh-CN" data-wallpaper="ink" transition:animate="none">
+<html lang="zh-CN" data-wallpaper="dusk" transition:animate="none">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#f7f7f4" />
+    <meta name="theme-color" content="#f5f3ee" />
+    <link rel="preload" href="/fonts/manrope-latin-variable.woff" as="font" type="font/woff" crossorigin />
     <ClientRouter fallback="swap" />
     <script is:inline>
       // Restore before first paint, including when returning from another page.
       (() => {
-        let mode = 'system', accent = 'blue', wallpaper = 'ink';
+        let mode = 'system', accent = 'blue', wallpaper = 'dusk';
         let sakura = !matchMedia('(prefers-reduced-motion: reduce)').matches;
         let mascot = true;
         try {
@@ -33,7 +35,7 @@ const { title = `${profile.name} · 个人主页`, description = profile.intro }
           if (['blue', 'green', 'purple', 'pink'].includes(savedAccent)) accent = savedAccent;
           const savedWallpaper = localStorage.getItem('buluku-wallpaper');
           const savedSakura = localStorage.getItem('buluku-sakura');
-          if (['ink', 'glow', 'none'].includes(savedWallpaper)) wallpaper = savedWallpaper;
+          if (['dusk', 'ink', 'glow', 'none'].includes(savedWallpaper)) wallpaper = savedWallpaper;
           if (['on', 'off'].includes(savedSakura)) sakura = savedSakura === 'on';
           mascot = localStorage.getItem('buluku-mascot') !== 'off';
         } catch {}
@@ -44,7 +46,7 @@ const { title = `${profile.name} · 个人主页`, description = profile.intro }
         document.documentElement.dataset.wallpaper = wallpaper;
         document.documentElement.dataset.sakura = sakura ? 'on' : 'off';
         document.documentElement.dataset.mascot = mascot ? 'on' : 'off';
-        document.querySelector('meta[name="theme-color"]').content = theme === 'dark' ? '#111315' : '#f7f7f4';
+        document.querySelector('meta[name="theme-color"]').content = theme === 'dark' ? '#121621' : '#f5f3ee';
       })();
     </script>
     <meta property="og:title" content={title} />
@@ -54,6 +56,7 @@ const { title = `${profile.name} · 个人主页`, description = profile.intro }
   </head>
   <body>
     <Atmosphere />
+    <div class="page-atmosphere-wash" aria-hidden="true"></div>
     <a class="skip-link" href="#main">跳到主要内容</a>
     <div class="site-shell">
       <header class="site-header flex items-center justify-between" transition:name="site-header" transition:animate="none">
