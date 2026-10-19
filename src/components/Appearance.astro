@@ -152,4 +152,6 @@ const accents = [
     if (event.key === 'Escape' && picker.open) { picker.open = false; toggle.focus(); }
   });
   apply();
+  // First paint restores instantly; only subsequent user changes interpolate.
+  requestAnimationFrame(() => requestAnimationFrame(() => { root.dataset.appearanceReady = ''; }));
 </script>

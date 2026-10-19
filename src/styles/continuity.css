@@ -1,0 +1,78 @@
+/* Typed colors interpolate every dependent surface in the same rhythm. */
+html { scrollbar-gutter:stable; }
+@property --paper { syntax:'<color>'; inherits:true; initial-value:#f7f7f4; }
+@property --surface { syntax:'<color>'; inherits:true; initial-value:#fffffd; }
+@property --surface-muted { syntax:'<color>'; inherits:true; initial-value:#eeefeb; }
+@property --surface-raised { syntax:'<color>'; inherits:true; initial-value:#f7f8f5; }
+@property --ink { syntax:'<color>'; inherits:true; initial-value:#242620; }
+@property --on-ink { syntax:'<color>'; inherits:true; initial-value:#fff; }
+@property --muted { syntax:'<color>'; inherits:true; initial-value:#666b64; }
+@property --subtle { syntax:'<color>'; inherits:true; initial-value:#747970; }
+@property --border { syntax:'<color>'; inherits:true; initial-value:#dfe2da; }
+@property --accent { syntax:'<color>'; inherits:true; initial-value:#2455f5; }
+@property --on-accent { syntax:'<color>'; inherits:true; initial-value:#fff; }
+:root[data-appearance-ready] {
+  transition:--paper .55s ease,--surface .55s ease,--surface-muted .55s ease,--surface-raised .55s ease,
+    --ink .55s ease,--on-ink .55s ease,--muted .55s ease,--subtle .55s ease,--border .55s ease,--accent .55s ease,--on-accent .55s ease;
+}
+/* Real stacked scenes: changing gradients/images cannot be interpolated directly. */
+:root[data-wallpaper] .wallpaper-layer { display:block; background:none; filter:none; }
+.wallpaper-layer::after { display:none; }
+.wallpaper-scene { position:absolute; inset:0; opacity:0; transition:opacity .65s ease; background-size:cover; background-position:center; }
+.wallpaper-ink { background-image:url('/images/wallpapers/ink.webp'); }
+.wallpaper-ink::before,.wallpaper-ink::after { content:''; position:absolute; inset:0; transition:opacity .55s ease; }
+.wallpaper-ink::before { background:linear-gradient(90deg,#f7f7f4f5 0%,#f7f7f4de 54%,#f7f7f4d9 100%); }
+.wallpaper-ink::after { background:linear-gradient(90deg,#111315f7 0%,#111315e6 58%,#111315db 100%); opacity:0; }
+:root[data-theme='dark'] .wallpaper-ink::before { opacity:0; }
+:root[data-theme='dark'] .wallpaper-ink::after { opacity:1; }
+.wallpaper-glow-light { background:radial-gradient(ellipse at 10% 15%,#e8deed 0,transparent 55%),radial-gradient(ellipse at 90% 65%,#dbe7f2 0,transparent 55%),linear-gradient(135deg,#f9ede6,#e9eef8 55%,#eadfe9); }
+.wallpaper-glow-dark { background:radial-gradient(ellipse at 10% 15%,#37304c 0,transparent 55%),radial-gradient(ellipse at 90% 65%,#1e354a 0,transparent 55%),linear-gradient(135deg,#201e2b,#111b28 55%,#2d2538); }
+:root[data-wallpaper='ink'] .wallpaper-ink,
+:root[data-wallpaper='glow']:not([data-theme='dark']) .wallpaper-glow-light,
+:root[data-wallpaper='glow'][data-theme='dark'] .wallpaper-glow-dark { opacity:1; }
+:root[data-wallpaper] .site-shell::before {
+  content:''; position:absolute; inset:0 calc(-1 * var(--shell-bleed)); z-index:-1; pointer-events:none;
+  border:0; border-radius:0; box-shadow:none; backdrop-filter:none; -webkit-backdrop-filter:none;
+  background:linear-gradient(180deg,transparent 0,transparent 350px,color-mix(in srgb,var(--paper) 92%,transparent) 780px,var(--paper) 100%);
+}
+.ripple-stage { border:1px solid var(--border); border-radius:24px; overflow:hidden; background:var(--surface); }
+.ripple-stage .ripple-expanded { border:0; border-radius:inherit; background:linear-gradient(145deg,var(--surface),var(--surface-muted)); }
+.ripple-stage .ripple-canvas { height:clamp(340px,44vw,500px); }
+.ripple-canvas { touch-action:pan-y; }
+.ripple-widget button:disabled { opacity:.5; cursor:default; }
+[data-route-title] { display:inline-block; width:fit-content; }
+/* Let the parent card own the image capture; persistence still keeps the live
+   canvas state. Audio and other persistent widgets keep their own names. */
+astro-island[data-astro-transition-persist='ripple-field'] { view-transition-name:none !important; }
+.music-player { view-transition-name:player-dock; }
+.mascot { view-transition-name:mascot-dock; }
+:root[data-route-moving] { scroll-behavior:auto; }
+:root[data-route-moving] [data-route-surface] { transform:none !important; }
+::view-transition { pointer-events:none; }
+::view-transition-group(featured-surface),::view-transition-group(featured-title) {
+  animation-duration:680ms; animation-timing-function:cubic-bezier(.22,1,.36,1);
+}
+::view-transition-group(featured-surface) { z-index:3; overflow:clip; border-radius:22px; }
+::view-transition-group(featured-title) { z-index:4; }
+::view-transition-group(site-header) { z-index:5; }
+::view-transition-group(player-dock),::view-transition-group(mascot-dock) { z-index:6; animation:none; }
+::view-transition-old(player-dock),::view-transition-old(mascot-dock) { display:none; }
+::view-transition-new(player-dock),::view-transition-new(mascot-dock) { animation:none; opacity:1; }
+::view-transition-old(featured-surface),::view-transition-new(featured-surface) { height:100%; object-fit:fill; mix-blend-mode:normal; }
+::view-transition-old(featured-surface),::view-transition-old(featured-title) { display:none; }
+::view-transition-new(featured-surface),::view-transition-new(featured-title) { animation:none; opacity:1; }
+::view-transition-old(page-content) { animation:continuity-out 100ms ease both; }
+::view-transition-new(page-content) { animation:continuity-in 420ms ease 100ms both; }
+@keyframes continuity-out { to { opacity:0; } }
+@keyframes continuity-in { from { opacity:0; } to { opacity:1; } }
+@media(max-width:760px) {
+  .ripple-stage .ripple-canvas { height:clamp(230px,72vw,340px); }
+  .wallpaper-ink { background-image:url('/images/wallpapers/ink-small.webp'); background-position:58% center; }
+  .wallpaper-ink::before { background:linear-gradient(180deg,#f7f7f4e9,#f7f7f4ef 65%,#f7f7f4f7); }
+  .wallpaper-ink::after { background:linear-gradient(180deg,#111315de,#111315e8 65%,#111315f7); }
+  ::view-transition-group(featured-surface),::view-transition-group(featured-title) { animation-duration:480ms; }
+}
+@media(prefers-reduced-motion:reduce) {
+  :root[data-appearance-ready],.wallpaper-scene,.wallpaper-ink::before,.wallpaper-ink::after { transition:none; }
+  ::view-transition-group(*),::view-transition-old(*),::view-transition-new(*) { animation:none !important; }
+}

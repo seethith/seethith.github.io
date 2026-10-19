@@ -35,6 +35,8 @@ export function initPageMotion() {
 
   function reveal(element: HTMLElement) {
     if (reduced.matches) return;
+    // Shared elements already have a route transition; don't animate them twice.
+    if (document.documentElement.hasAttribute('data-route-moving')) return;
     const title = element.dataset.reveal === 'title';
     const animation = element.animate([
       { opacity: 0, transform: title ? 'translateY(105%)' : 'translateY(22px)' },

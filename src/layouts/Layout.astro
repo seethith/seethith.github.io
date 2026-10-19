@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import '../styles/refinement.css';
+import '../styles/continuity.css';
 import { profile } from '../data/site';
 import Appearance from '../components/Appearance.astro';
 import Atmosphere from '../components/Atmosphere.astro';
@@ -12,7 +13,7 @@ interface Props { title?: string; description?: string }
 const { title = `${profile.name} · 个人主页`, description = profile.intro } = Astro.props;
 ---
 <!doctype html>
-<html lang="zh-CN" data-wallpaper="ink">
+<html lang="zh-CN" data-wallpaper="ink" transition:animate="none">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -55,7 +56,7 @@ const { title = `${profile.name} · 个人主页`, description = profile.intro }
     <Atmosphere />
     <a class="skip-link" href="#main">跳到主要内容</a>
     <div class="site-shell">
-      <header class="site-header flex items-center justify-between">
+      <header class="site-header flex items-center justify-between" transition:name="site-header" transition:animate="none">
         <a href="/" class="brand" aria-label="buluku 首页"><span class="brand-mark">b<span>✳</span></span><span>{profile.name}<span class="brand-period">.</span></span></a>
         <div class="header-actions">
           <nav class="flex items-center gap-7" aria-label="主要导航">
@@ -64,7 +65,7 @@ const { title = `${profile.name} · 个人主页`, description = profile.intro }
           <Appearance />
         </div>
       </header>
-      <main id="main"><slot /></main>
+      <main id="main" transition:name="page-content"><slot /></main>
       <footer class="site-footer flex flex-wrap items-center justify-between gap-4">
         <p>© 2026 {profile.name}</p>
         <a href="#main" class="back-top">回到顶部 <span aria-hidden="true">↑</span></a>
@@ -74,6 +75,7 @@ const { title = `${profile.name} · 个人主页`, description = profile.intro }
     <Mascot />
     <script>
       import { initPageMotion, disposePageMotion } from '../scripts/page-motion';
+      import '../scripts/route-continuity';
       initPageMotion();
       document.addEventListener('astro:page-load', initPageMotion);
       document.addEventListener('astro:before-swap', disposePageMotion);

@@ -6,9 +6,9 @@ const { articles } = Astro.props;
 ---
 {articles.length ? (
   <ul class="article-list">
-    {articles.map(article => <li data-reveal><a class="article-row" href={articleUrl(article.id)}>
+    {articles.map(article => <li data-reveal><a class="article-row" href={articleUrl(article.id)} data-article-url={articleUrl(article.id)}>
       <time class="mono" datetime={articleDate(article.data.date)}>{articleDate(article.data.date)}</time>
-      <div><h3>{article.data.title}</h3>{article.data.description && <p>{article.data.description}</p>}</div>
+      <div><h3 data-article-title={articleUrl(article.id)}>{article.data.title}</h3>{article.data.description && <p>{article.data.description}</p>}</div>
       <span aria-hidden="true">↗</span>
     </a></li>)}
   </ul>
