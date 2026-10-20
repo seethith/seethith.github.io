@@ -1,6 +1,5 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import RippleField from '../components/RippleField';
 import PalettePlay from '../components/PalettePlay';
 import Elsewhere from '../components/Elsewhere.astro';
 import ArticleList from '../components/ArticleList.astro';
@@ -15,9 +14,6 @@ const articles = await getArticles();
     <div class="stage-intro" data-reveal data-delay="80">
       <p class="hero-description">做一点有趣的东西。<br />小工具、项目和文字，都放在这里。</p>
       <a href="#playground" class="stage-action">探索小工具 <span aria-hidden="true">↘</span></a>
-    </div>
-    <div class="stage-wave" data-route-surface="ripple-hero">
-      <RippleField client:load transition:persist="ripple-field" />
     </div>
     <div class="stage-mascot-slot" aria-label="首屏看板娘"></div>
     <nav class="chapter-nav" aria-label="首页章节">

@@ -12,12 +12,12 @@ const accents = [
 ];
 ---
 <details class="appearance" id="appearance" transition:persist="appearance">
-  <summary class="appearance-toggle" aria-label="外观设置" title="外观设置">
+  <summary class="appearance-toggle" aria-label="外观设置" aria-controls="appearance-panel" title="外观设置">
     <svg class="theme-sun" viewBox="0 0 24 24" aria-hidden="true"><path d={modes[0].path} /></svg>
     <svg class="theme-moon" viewBox="0 0 24 24" aria-hidden="true"><path d={modes[1].path} /></svg>
     <span class="appearance-dot" aria-hidden="true"></span>
   </summary>
-  <div class="appearance-panel">
+  <div class="appearance-panel" id="appearance-panel">
     <fieldset>
       <legend>外观</legend>
       <div class="mode-options">
@@ -77,9 +77,24 @@ const accents = [
   </div>
 </details>
 <script>
+  import { createPanelMotion } from '../scripts/panel-motion';
   const root = document.documentElement;
   const picker = document.querySelector<HTMLDetailsElement>('#appearance')!;
   const toggle = picker.querySelector<HTMLElement>('summary')!;
+  const panel = picker.querySelector<HTMLElement>('.appearance-panel')!;
+  const panelMotion = createPanelMotion(panel, 'top');
+  let expanded = picker.open;
+  panelMotion.setOpen(expanded, true);
+  function setExpanded(value: boolean, immediate = false) {
+    expanded = value;
+    toggle.setAttribute('aria-expanded', String(value));
+    if (value) picker.open = true;
+    panelMotion.setOpen(value, immediate, () => { if (!expanded) picker.open = false; });
+  }
+  toggle.addEventListener('click', event => {
+    event.preventDefault();
+    setExpanded(!expanded);
+  });
   const system = window.matchMedia('(prefers-color-scheme: dark)');
   const modeKey = 'buluku-color-mode';
   const accentKey = 'buluku-accent';
@@ -135,7 +150,7 @@ const accents = [
   });
   system.addEventListener('change', () => { if (mode === 'system') apply(); });
   reducedMotion.addEventListener('change', apply);
-  document.addEventListener('astro:after-swap', () => { picker.open = false; apply(); });
+  document.addEventListener('astro:after-swap', () => { setExpanded(false, true); apply(); });
   window.addEventListener('mascotchange', event => {
     if (!(event instanceof CustomEvent) || typeof event.detail !== 'boolean') return;
     mascot = event.detail;
@@ -151,10 +166,10 @@ const accents = [
     if ([modeKey, accentKey, wallpaperKey, sakuraKey, mascotKey, null].includes(event.key)) apply();
   });
   document.addEventListener('pointerdown', event => {
-    if (event.target instanceof Node && !picker.contains(event.target)) picker.open = false;
+    if (expanded && event.target instanceof Node && !picker.contains(event.target)) setExpanded(false);
   });
   document.addEventListener('keydown', event => {
-    if (event.key === 'Escape' && picker.open) { picker.open = false; toggle.focus(); }
+    if (event.key === 'Escape' && expanded) { setExpanded(false); toggle.focus(); }
   });
   apply();
   // First paint restores instantly; only subsequent user changes interpolate.

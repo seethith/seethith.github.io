@@ -1,0 +1,112 @@
+/* Translucent utilities: the scene supplies the color, the tint protects the text. */
+:root {
+  --reading-veil:64%;
+  --glass-tint:color-mix(in srgb,var(--surface) 68%,transparent);
+  --glass-rim:#ffffffb3;
+  --glass-sheen:#ffffff66;
+  --glass-border:color-mix(in srgb,var(--ink) 16%,transparent);
+  --glass-shadow:#14213a1f;
+  --glass-control:color-mix(in srgb,var(--surface) 38%,transparent);
+}
+:root[data-theme='dark'] {
+  --reading-veil:55%;
+  --glass-tint:color-mix(in srgb,var(--paper) 57%,transparent);
+  --glass-rim:#ffffff3d;
+  --glass-sheen:#ffffff14;
+  --glass-border:#c8d8ef33;
+  --glass-shadow:#040b1b40;
+  --glass-control:#d9e7ff0a;
+}
+:root[data-wallpaper] .site-shell::before { display:none; }
+/* Named view-transition groups isolate backdrop sampling in WebKit. Only name
+   the persistent docks while a route capture is actually taking place. */
+.site-header,.music-player { view-transition-name:none !important; }
+:root[data-route-moving] .site-header { view-transition-name:site-header !important; }
+:root[data-route-moving] .music-player { view-transition-name:player-dock !important; }
+
+/* Put the header blur on a sibling layer. Blurring the header itself creates a
+   backdrop root that prevents its settings panel from sampling the wallpaper. */
+.site-header,.site-header[data-scrolled] {
+  isolation:isolate; background:none; box-shadow:none;
+  -webkit-backdrop-filter:none; backdrop-filter:none;
+}
+.site-header::before {
+  content:''; position:absolute; inset:0 -22px; z-index:-1; pointer-events:none;
+  background:color-mix(in srgb,var(--paper) 53%,transparent);
+  -webkit-backdrop-filter:blur(20px) saturate(135%); backdrop-filter:blur(20px) saturate(135%);
+  opacity:0; transition:opacity .25s ease;
+}
+.site-header[data-scrolled]::before { opacity:1; }
+
+.appearance-panel,.music-panel,.music-mini {
+  color:var(--ink);
+  background:
+    radial-gradient(ellipse at 0 0,var(--glass-sheen),transparent 60%),
+    linear-gradient(145deg,#ffffff08,transparent 45%,#c5d9f50a),
+    var(--glass-tint);
+  border:1px solid var(--glass-border);
+  -webkit-backdrop-filter:blur(24px) saturate(145%); backdrop-filter:blur(24px) saturate(145%);
+  box-shadow:inset 0 1px 0 var(--glass-rim),inset 0 -1px 0 #ffffff0a,
+    0 12px 36px var(--glass-shadow),0 2px 6px #060d1b0a;
+}
+.appearance-panel,.music-panel {
+  border-radius:24px; padding:22px;
+  scrollbar-width:thin; scrollbar-color:var(--glass-border) transparent;
+}
+.appearance-panel {
+  width:304px; max-width:calc(100vw - 32px); max-height:calc(100dvh - 112px);
+  transform-origin:calc(100% - 20px) top;
+}
+.appearance-panel[hidden] { display:none; }
+.appearance-panel fieldset+fieldset { margin-top:20px; }
+.appearance-panel legend { font-size:13px; font-weight:600; color:var(--ink); }
+.appearance-panel :is(.sakura-option,.wallpaper-settings) { border-color:var(--glass-border) !important; }
+.mode-options { background:var(--glass-control); border:1px solid var(--glass-border); border-radius:12px; }
+.mode-option { border-radius:8px; }
+.mode-option:has(input:checked) {
+  background:color-mix(in srgb,var(--surface) 70%,transparent);
+  box-shadow:inset 0 1px 0 var(--glass-rim),0 2px 5px #0000000d;
+}
+.accent-option,.wallpaper-option { font-size:12px; }
+.wallpaper-option { gap:9px; }
+.wallpaper-sample { height:46px; border-radius:9px; }
+.sakura-option { font-size:13px; margin-top:18px; padding-top:16px; color:var(--ink); }
+.appearance-toggle { transition:background .2s,color .2s,border-color .2s; }
+.appearance-toggle:hover,.appearance-toggle[aria-expanded='true'] { background:var(--glass-control); }
+
+.music-mini { border-radius:20px; }
+.music-panel {
+  width:340px; max-width:calc(100vw - 32px); bottom:calc(100% + 12px);
+  transform-origin:28px calc(100% + 34px);
+}
+.music-panel :is(.music-panel-heading,.music-panel-footer,.music-credit) { border-color:var(--glass-border); }
+.music-panel-heading { font-size:14px; padding-bottom:14px; }
+.music-track-list { margin-top:12px; }
+.music-track { min-height:50px; border-radius:11px; color:var(--ink); transition:background .18s,color .18s; }
+.music-track-copy strong { font-size:14px; font-weight:500; }
+.music-track-duration,.music-time,.music-count { font-size:11px; color:var(--muted); }
+.music-track:hover,.music-icon-button:hover { background:var(--glass-control); }
+.music-track[aria-current='true'] {
+  color:var(--ink); background:color-mix(in srgb,var(--accent) 15%,transparent);
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 22%,transparent);
+}
+.music-track[aria-current='true'] .music-track-number { color:var(--accent); }
+.music-repeat { font-size:12px; }
+.music-cover { border-radius:11px; }
+.music-icon-button,.music-play-button { transition:background .18s,color .18s,transform .18s; }
+.music-icon-button:active,.music-play-button:active { transform:scale(.94); }
+.music-list-icon { transition:color .2s,transform .3s var(--ease-out); }
+.music-expand[aria-expanded='true'] .music-list-icon { color:var(--accent); transform:translateY(-2px); }
+
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))) {
+  .appearance-panel,.music-panel,.music-mini { background:color-mix(in srgb,var(--surface) 97%,transparent); }
+  .site-header::before { background:color-mix(in srgb,var(--paper) 95%,transparent); }
+}
+@media(max-width:760px) {
+  .site-header::before { inset-inline:-20px; }
+  .appearance-panel { max-height:calc(100dvh - 100px); padding:20px; }
+  .music-panel { padding:18px; max-width:calc(100vw - 24px); }
+}
+@media(prefers-reduced-motion:reduce) {
+  .site-header::before,.music-track,.music-icon-button,.music-play-button,.music-list-icon { transition:none; }
+}

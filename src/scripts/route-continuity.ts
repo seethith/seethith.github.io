@@ -1,7 +1,6 @@
 import type { TransitionBeforePreparationEvent, TransitionBeforeSwapEvent } from 'astro:transitions/client';
 
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-let origin: 'hero' | 'card' = 'hero';
 let generation = 0;
 let named: HTMLElement[] = [];
 const path = (url: URL) => url.pathname.replace(/\/$/, '') || '/';
@@ -40,13 +39,11 @@ document.addEventListener('astro:before-preparation', event => {
     document.documentElement.dataset.routeMoving = '';
     e.newDocument.documentElement.dataset.routeMoving = '';
     if (from === '/' && to === '/lab/ripple') {
-      if (e.sourceElement) origin = e.sourceElement.closest('.ripple-project') ? 'card' : 'hero';
-      pair(surface(document, `ripple-${origin}`), surface(e.newDocument, 'ripple-detail'), 'featured-surface');
-      if (origin === 'card') pair(title(document, 'ripple'), title(e.newDocument, 'ripple'), 'featured-title');
+      pair(surface(document, 'ripple-card'), surface(e.newDocument, 'ripple-detail'), 'featured-surface');
+      pair(title(document, 'ripple'), title(e.newDocument, 'ripple'), 'featured-title');
     } else if (from === '/lab/ripple' && to === '/') {
-      if (e.sourceElement?.closest('.brand')) origin = 'hero';
-      pair(surface(document, 'ripple-detail'), surface(e.newDocument, `ripple-${origin}`), 'featured-surface');
-      if (origin === 'card') pair(title(document, 'ripple'), title(e.newDocument, 'ripple'), 'featured-title');
+      pair(surface(document, 'ripple-detail'), surface(e.newDocument, 'ripple-card'), 'featured-surface');
+      pair(title(document, 'ripple'), title(e.newDocument, 'ripple'), 'featured-title');
     } else if ((from === '/' && to === '/articles') || (from === '/articles' && to === '/')) {
       pair(title(document, 'articles'), title(e.newDocument, 'articles'), 'featured-title');
     } else {
@@ -70,9 +67,4 @@ document.addEventListener('astro:before-swap', event => {
     clearNames(); delete document.documentElement.dataset.routeMoving;
   };
   void e.viewTransition.finished.then(finish, finish);
-});
-
-document.addEventListener('astro:page-load', () => {
-  const back = document.querySelector<HTMLAnchorElement>('.lab-page .lab-back');
-  if (back && origin === 'hero') { back.href = '/'; back.textContent = '← 首页'; }
 });

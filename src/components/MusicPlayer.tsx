@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { MusicTrack } from '../data/music';
+import { createPanelMotion } from '../scripts/panel-motion';
 
 const volumeKey = 'buluku-music-volume';
 const repeatKey = 'buluku-music-repeat';
@@ -32,6 +33,8 @@ export default function MusicPlayer({ tracks }: { tracks: MusicTrack[] }) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const playerRef = useRef<HTMLElement>(null);
   const expandRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const panelMotion = useRef<ReturnType<typeof createPanelMotion> | null>(null);
   const selected = useRef(0);
   const request = useRef(0);
   const [index, setIndex] = useState(0);
@@ -47,6 +50,14 @@ export default function MusicPlayer({ tracks }: { tracks: MusicTrack[] }) {
   const track = tracks[index];
   const displayDuration = duration || track?.duration || 0;
   const progress = displayDuration ? Math.min(100, time / displayDuration * 100) : 0;
+
+  useEffect(() => {
+    if (!panelRef.current) return;
+    const motion = createPanelMotion(panelRef.current, 'bottom');
+    panelMotion.current = motion;
+    return () => { motion.destroy(); panelMotion.current = null; };
+  }, []);
+  useEffect(() => { panelMotion.current?.setOpen(expanded); }, [expanded]);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -69,7 +80,7 @@ export default function MusicPlayer({ tracks }: { tracks: MusicTrack[] }) {
         expandRef.current?.focus();
       }
     };
-    const closeOnNavigation = () => setExpanded(false);
+    const closeOnNavigation = () => { panelMotion.current?.setOpen(false, true); setExpanded(false); };
     document.addEventListener('pointerdown', closeOutside);
     document.addEventListener('keydown', escape);
     document.addEventListener('astro:after-swap', closeOnNavigation);
@@ -161,7 +172,7 @@ export default function MusicPlayer({ tracks }: { tracks: MusicTrack[] }) {
       onEnded={() => choose(selected.current + 1, true)}
       onError={() => { if (audioRef.current?.getAttribute('src')) { setError('这首歌暂时无法播放，可重试或换一首'); setLoading(false); setPlaying(false); } }}
     />
-    <div className="music-panel" id="music-playlist" hidden={!expanded}>
+    <div className="music-panel" id="music-playlist" ref={panelRef} hidden inert={!expanded} aria-hidden={!expanded}>
       <div className="music-panel-heading"><span>我的歌单 <span className="music-count">{tracks.length.toString().padStart(2, '0')}</span></span><button type="button" className="music-icon-button" aria-label="收起歌单" onClick={() => { setExpanded(false); expandRef.current?.focus(); }}><Icon name="close" /></button></div>
       {track ? <>
         <ol className="music-track-list">
