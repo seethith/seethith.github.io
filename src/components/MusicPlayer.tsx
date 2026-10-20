@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import type { MusicTrack } from '../data/music';
-import { createPanelMotion } from '../scripts/panel-motion';
+import { createSleeveMotion } from '../scripts/panel-motion';
 
 const volumeKey = 'buluku-music-volume';
 const repeatKey = 'buluku-music-repeat';
@@ -34,7 +34,7 @@ export default function MusicPlayer({ tracks }: { tracks: MusicTrack[] }) {
   const playerRef = useRef<HTMLElement>(null);
   const expandRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
-  const panelMotion = useRef<ReturnType<typeof createPanelMotion> | null>(null);
+  const panelMotion = useRef<ReturnType<typeof createSleeveMotion> | null>(null);
   const selected = useRef(0);
   const request = useRef(0);
   const [index, setIndex] = useState(0);
@@ -53,7 +53,7 @@ export default function MusicPlayer({ tracks }: { tracks: MusicTrack[] }) {
 
   useEffect(() => {
     if (!panelRef.current) return;
-    const motion = createPanelMotion(panelRef.current, 'bottom');
+    const motion = createSleeveMotion(panelRef.current);
     panelMotion.current = motion;
     return () => { motion.destroy(); panelMotion.current = null; };
   }, []);
@@ -160,7 +160,7 @@ export default function MusicPlayer({ tracks }: { tracks: MusicTrack[] }) {
     try { localStorage.setItem(repeatKey, value ? 'one' : 'all'); } catch {}
   }
 
-  return <aside className="music-player" ref={playerRef} aria-label="音乐播放器" data-playing={playing}>
+  return <aside className="music-player" ref={playerRef} aria-label="音乐播放器" data-playing={playing} data-expanded={expanded}>
     <audio ref={audioRef} preload="none" loop={repeatOne}
       onPlay={() => setPlaying(true)}
       onPlaying={() => { setPlaying(true); setLoading(false); }}
@@ -172,7 +172,9 @@ export default function MusicPlayer({ tracks }: { tracks: MusicTrack[] }) {
       onEnded={() => choose(selected.current + 1, true)}
       onError={() => { if (audioRef.current?.getAttribute('src')) { setError('这首歌暂时无法播放，可重试或换一首'); setLoading(false); setPlaying(false); } }}
     />
+    <div className="music-sleeve">
     <div className="music-panel" id="music-playlist" ref={panelRef} hidden inert={!expanded} aria-hidden={!expanded}>
+      <div className="music-panel-content">
       <div className="music-panel-heading"><span>我的歌单 <span className="music-count">{tracks.length.toString().padStart(2, '0')}</span></span><button type="button" className="music-icon-button" aria-label="收起歌单" onClick={() => { setExpanded(false); expandRef.current?.focus(); }}><Icon name="close" /></button></div>
       {track ? <>
         <ol className="music-track-list">
@@ -185,27 +187,30 @@ export default function MusicPlayer({ tracks }: { tracks: MusicTrack[] }) {
             </button>
           </li>)}
         </ol>
-        <div className="music-seek"><input type="range" min="0" max={displayDuration || 1} step="0.1" value={Math.min(time, displayDuration || 1)} disabled={!duration} aria-label="播放进度" aria-valuetext={`${formatTime(time)} / ${formatTime(displayDuration)}`} onChange={event => { const value = Number(event.target.value); if (audioRef.current) audioRef.current.currentTime = value; setTime(value); }} /><div className="music-time"><span>{formatTime(time)}</span><span>{formatTime(displayDuration)}</span></div></div>
+        <div className="music-seek"><input type="range" min="0" max={displayDuration || 1} step="0.1" value={Math.min(time, displayDuration || 1)} style={{ '--range-fill': `${progress}%` } as CSSProperties} disabled={!duration} aria-label="播放进度" aria-valuetext={`${formatTime(time)} / ${formatTime(displayDuration)}`} onChange={event => { const value = Number(event.target.value); if (audioRef.current) audioRef.current.currentTime = value; setTime(value); }} /><div className="music-time"><span>{formatTime(time)}</span><span>{formatTime(displayDuration)}</span></div></div>
         <div className="music-controls">
           <button type="button" className="music-icon-button" aria-label="上一首" onClick={() => choose(selected.current - 1, playing || loading)}><Icon name="previous" /></button>
-          <button type="button" className="music-play-button" aria-busy={loading} aria-label={playing || loading ? '暂停音乐' : '播放音乐'} onClick={() => playing || loading ? pause() : void play()}><Icon name={playing || loading ? 'pause' : 'play'} /></button>
           <button type="button" className="music-icon-button" aria-label="下一首" onClick={() => choose(selected.current + 1, playing || loading)}><Icon name="next" /></button>
-          <div className="music-volume"><button type="button" className="music-icon-button" aria-label={muted ? '取消静音' : '静音'} onClick={() => { if (audioRef.current) audioRef.current.muted = !muted; setMuted(!muted); }}><Icon name={muted || volume === 0 ? 'muted' : 'volume'} /></button><input type="range" min="0" max="1" step="0.01" value={muted ? 0 : volume} onChange={event => changeVolume(Number(event.target.value))} aria-label="音量" aria-valuetext={`${Math.round((muted ? 0 : volume) * 100)}%`} /></div>
+          <div className="music-volume"><button type="button" className="music-icon-button" aria-label={muted ? '取消静音' : '静音'} onClick={() => { if (audioRef.current) audioRef.current.muted = !muted; setMuted(!muted); }}><Icon name={muted || volume === 0 ? 'muted' : 'volume'} /></button><input type="range" min="0" max="1" step="0.01" value={muted ? 0 : volume} style={{ '--range-fill': `${(muted ? 0 : volume) * 100}%` } as CSSProperties} onChange={event => changeVolume(Number(event.target.value))} aria-label="音量" aria-valuetext={`${Math.round((muted ? 0 : volume) * 100)}%`} /></div>
         </div>
         <div className="music-panel-footer"><button type="button" className="music-repeat" aria-label={repeatOne ? '单曲循环，切换为列表循环' : '列表循环，切换为单曲循环'} onClick={toggleRepeat}><Icon name={repeatOne ? 'repeatOne' : 'repeat'} /><span>{repeatOne ? '单曲循环' : '列表循环'}</span></button><span>{String(index + 1).padStart(2, '0')} / {String(tracks.length).padStart(2, '0')}</span></div>
         {track.credit && <a className="music-credit" href={track.credit.href} target="_blank" rel="noopener noreferrer">{track.credit.label} ↗</a>}
       </> : <p className="music-empty">还没有添加歌曲</p>}
       {error && <p className="music-error" role="status">{error}</p>}
+      </div>
     </div>
     <div className="music-mini">
       <button type="button" className="music-expand" ref={expandRef} aria-expanded={expanded} aria-controls="music-playlist" aria-label={expanded ? '收起歌单' : '展开歌单'} onClick={() => setExpanded(value => !value)}>
-        <span className="music-cover"><Cover track={track} /></span>
         <span className="music-mini-copy"><strong>{track?.title ?? '音乐'}</strong><span>{error ? '播放遇到问题' : loading ? '正在加载…' : track ? track.artist ?? `${formatTime(displayDuration)} · 我的歌单` : '暂无歌曲'}</span></span>
         <span className="music-list-icon"><Icon name="list" /></span>
       </button>
       <button type="button" className="music-play-button" aria-busy={loading} aria-label={playing || loading ? '暂停音乐' : '播放音乐'} disabled={!track} onClick={() => playing || loading ? pause() : void play()}><Icon name={playing || loading ? 'pause' : 'play'} /></button>
       <span className="music-mini-progress" aria-hidden="true"><span style={{ width: `${progress}%` }} /></span>
     </div>
+    </div>
+    <button type="button" className="music-record" aria-label={expanded ? '收起唱片歌单' : '展开唱片歌单'} aria-controls="music-playlist" aria-expanded={expanded} onClick={() => setExpanded(value => !value)}>
+      <span className="music-record-grooves" aria-hidden="true"><span className="music-cover"><Cover track={track} /></span></span>
+    </button>
     <noscript>播放器需要启用 JavaScript。</noscript>
   </aside>;
 }

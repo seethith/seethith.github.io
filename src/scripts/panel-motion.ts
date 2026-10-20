@@ -48,3 +48,51 @@ export function createPanelMotion(panel: HTMLElement, edge: 'top' | 'bottom') {
     },
   };
 }
+
+/** The sleeve grows upward while its record and transport stay at the same spot. */
+export function createSleeveMotion(panel: HTMLElement) {
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  let animation: Animation | undefined;
+  let finish: (() => void) | undefined;
+
+  function setOpen(open: boolean, immediate = false) {
+    const height = panel.hidden ? 0 : panel.getBoundingClientRect().height;
+    animation?.cancel();
+    animation = undefined;
+    panel.inert = !open;
+    panel.setAttribute('aria-hidden', String(!open));
+    finish = () => {
+      panel.hidden = !open;
+      animation?.cancel();
+      animation = undefined;
+      finish = undefined;
+    };
+    if (immediate || reduced.matches || !panel.animate || (!height && !open)) {
+      finish();
+      return;
+    }
+    panel.hidden = false;
+    animation = panel.animate([
+      { height: `${height}px` },
+      { height: `${open ? panel.scrollHeight : 0}px` },
+    ], {
+      duration: open ? 440 : 300,
+      easing: 'cubic-bezier(.22,.8,.22,1)',
+      fill: 'both',
+    });
+    animation.onfinish = () => finish?.();
+  }
+  const stopMotion = () => { if (reduced.matches) finish?.(); };
+  const resize = () => finish?.();
+  reduced.addEventListener('change', stopMotion);
+  window.addEventListener('resize', resize);
+  return {
+    setOpen,
+    destroy() {
+      animation?.cancel();
+      finish = undefined;
+      reduced.removeEventListener('change', stopMotion);
+      window.removeEventListener('resize', resize);
+    },
+  };
+}

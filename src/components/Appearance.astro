@@ -18,8 +18,22 @@ const accents = [
     <span class="appearance-dot" aria-hidden="true"></span>
   </summary>
   <div class="appearance-panel" id="appearance-panel">
+    <div class="appearance-heading">
+      <span>外观<span class="appearance-heading-mark" aria-hidden="true">✦</span></span>
+      <button type="button" class="appearance-close" aria-label="关闭外观设置"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6" /></svg></button>
+    </div>
+    <div class="appearance-book">
+    <div class="appearance-index" aria-label="外观分类" hidden>
+      {[
+        { id: 'theme', number: '01', label: '主题' },
+        { id: 'background', number: '02', label: '背景' },
+        { id: 'atmosphere', number: '03', label: '氛围' },
+      ].map(tab => <button type="button" id={`appearance-tab-${tab.id}`} data-appearance-tab={tab.id} aria-controls={`appearance-page-${tab.id}`}><span aria-hidden="true">{tab.number}</span>{tab.label}</button>)}
+    </div>
+    <div class="appearance-pages">
+    <section class="appearance-page" id="appearance-page-theme" aria-label="主题">
     <fieldset>
-      <legend>外观</legend>
+      <legend>明暗</legend>
       <div class="mode-options">
         {modes.map(mode => <label class="mode-option">
           <input type="radio" name="color-mode" value={mode.value} checked={mode.value === 'system'} />
@@ -38,8 +52,10 @@ const accents = [
         </label>)}
       </div>
     </fieldset>
+    </section>
+    <section class="appearance-page" id="appearance-page-background" aria-label="背景">
     <fieldset class="wallpaper-settings">
-      <legend>背景</legend>
+      <legend>壁纸</legend>
       <div class="wallpaper-options">
         <label class="wallpaper-option">
           <input type="radio" name="wallpaper" value="dusk" checked />
@@ -63,6 +79,9 @@ const accents = [
         </label>
       </div>
     </fieldset>
+    </section>
+    <section class="appearance-page" id="appearance-page-atmosphere" aria-label="氛围">
+    <p class="appearance-page-title">动态与陪伴</p>
     <label class="sakura-option">
       <span class="sakura-option-label"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 10C7 2 4 7 7 11c-8 0-6 6-1 6-2 6 4 7 6 2 2 5 8 4 6-2 5 0 7-6-1-6 3-4 0-9-5-1Z" /></svg>飘落樱花</span>
       <input type="checkbox" name="sakura" role="switch" />
@@ -74,6 +93,9 @@ const accents = [
       <input type="checkbox" name="mascot" role="switch" />
       <span class="setting-switch" aria-hidden="true"></span>
     </label>
+    </section>
+    </div>
+    </div>
   </div>
 </details>
 <script>
@@ -95,13 +117,56 @@ const accents = [
     event.preventDefault();
     setExpanded(!expanded);
   });
+  picker.querySelector('.appearance-close')?.addEventListener('click', () => {
+    setExpanded(false);
+    toggle.focus();
+  });
+  const tablist = picker.querySelector<HTMLElement>('.appearance-index')!;
+  const tabs = [...picker.querySelectorAll<HTMLButtonElement>('[data-appearance-tab]')];
+  const pages = [...picker.querySelectorAll<HTMLElement>('.appearance-page')];
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let activeTab = 0;
+  let pageAnimation: Animation | undefined;
+  function selectTab(index: number, animate = true) {
+    pageAnimation?.cancel();
+    activeTab = index;
+    tabs.forEach((tab, i) => {
+      tab.setAttribute('aria-selected', String(i === index));
+      tab.tabIndex = i === index ? 0 : -1;
+    });
+    pages.forEach((page, i) => { page.hidden = i !== index; });
+    if (animate && !reducedMotion.matches) {
+      pageAnimation = pages[index]?.animate([
+        { opacity: 0, transform: 'translateX(5px)' },
+        { opacity: 1, transform: 'none' },
+      ], { duration: 220, easing: 'cubic-bezier(.2,.8,.2,1)' });
+    }
+  }
+  tablist.hidden = false;
+  tablist.setAttribute('role', 'tablist');
+  tablist.setAttribute('aria-orientation', 'vertical');
+  tabs.forEach((tab, i) => {
+    tab.setAttribute('role', 'tab');
+    pages[i]?.setAttribute('role', 'tabpanel');
+    pages[i]?.setAttribute('aria-labelledby', tab.id);
+    tab.addEventListener('click', () => selectTab(i));
+    tab.addEventListener('keydown', event => {
+      const next = event.key === 'ArrowDown' ? (activeTab + 1) % tabs.length
+        : event.key === 'ArrowUp' ? (activeTab + tabs.length - 1) % tabs.length
+        : event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : -1;
+      if (next < 0) return;
+      event.preventDefault();
+      selectTab(next);
+      tabs[next]?.focus();
+    });
+  });
+  selectTab(0, false);
   const system = window.matchMedia('(prefers-color-scheme: dark)');
   const modeKey = 'buluku-color-mode';
   const accentKey = 'buluku-accent';
   const wallpaperKey = 'buluku-wallpaper';
   const sakuraKey = 'buluku-sakura';
   const mascotKey = 'buluku-mascot';
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const validMode = (value: string | null | undefined) => ['light', 'dark', 'system'].includes(value ?? '') ? value! : 'system';
   const validAccent = (value: string | null | undefined) => ['blue', 'green', 'purple', 'pink'].includes(value ?? '') ? value! : 'blue';
   const validWallpaper = (value: string | null | undefined) => ['dusk', 'ink', 'glow', 'none'].includes(value ?? '') ? value! : 'dusk';
@@ -149,7 +214,7 @@ const accents = [
     } catch { /* The controls still work when browser storage is unavailable. */ }
   });
   system.addEventListener('change', () => { if (mode === 'system') apply(); });
-  reducedMotion.addEventListener('change', apply);
+  reducedMotion.addEventListener('change', () => { pageAnimation?.cancel(); apply(); });
   document.addEventListener('astro:after-swap', () => { setExpanded(false, true); apply(); });
   window.addEventListener('mascotchange', event => {
     if (!(event instanceof CustomEvent) || typeof event.detail !== 'boolean') return;
