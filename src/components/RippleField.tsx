@@ -51,7 +51,8 @@ export default function RippleField({ expanded = false }: Props) {
       canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       // Keep the same mesh through route expansion. Phones use fewer vertices.
-      const count = width < 390 ? 34 : 48;
+      const ambient = !!canvas.closest('.stage-wave');
+      const count = ambient || width < 390 ? 34 : 48;
       if (!vertices.length || count !== columns) {
         columns = count; rows = count === 34 ? 24 : 30;
         vertices = Array.from({ length: (columns + 1) * (rows + 1) }, (_, i) => ({
@@ -81,7 +82,8 @@ export default function RippleField({ expanded = false }: Props) {
       frame = 0;
       if (!visible || document.hidden || !width || !height) return;
       const moving = canMove();
-      const interval = width < 390 ? 1000 / 30 : 1000 / 45;
+      const ambient = !!canvas!.closest('.stage-wave');
+      const interval = ambient || width < 390 ? 1000 / 30 : 1000 / 45;
       if (last && now - last < interval && moving) { schedule(); return; }
       const dt = Math.min(last ? (now - last) / 1000 : 1 / 45, .05);
       last = now;
@@ -92,7 +94,7 @@ export default function RippleField({ expanded = false }: Props) {
         ripples.current = ripples.current.filter(r => r.age < 2.6);
       }
       ctx!.clearRect(0, 0, width, height);
-      const scale = Math.min(width * .36, height * .8);
+      const scale = Math.min(width * (ambient ? .44 : .36), height * (ambient ? 1.12 : .8));
       const cx = width * .5, cy = height * .53;
       const amplitude = settings.current.intensity / 65;
       const yaw = -.28 + (reduced.matches ? 0 : Math.sin(phase * .22) * .035);
@@ -125,7 +127,7 @@ export default function RippleField({ expanded = false }: Props) {
       for (let row = 0; row <= rows; row++) {
         const edge = Math.sin(row / rows * Math.PI);
         ctx!.strokeStyle = row % 5 === 0 ? accent : ink;
-        ctx!.globalAlpha = (.10 + edge * .18) * (row % 5 === 0 ? 1.5 : 1);
+        ctx!.globalAlpha = (.10 + edge * .18) * (row % 5 === 0 ? 1.5 : 1) * (ambient ? .85 : 1);
         ctx!.beginPath();
         for (let col = 0; col <= columns; col++) {
           const p = vertices[row * (columns + 1) + col]!;
@@ -146,7 +148,7 @@ export default function RippleField({ expanded = false }: Props) {
       ctx!.fillStyle = accent;
       for (const p of vertices) {
         const edge = Math.pow(Math.max(0, (1 - p.u * p.u) * (1 - p.v * p.v)), .3);
-        ctx!.globalAlpha = edge * (.22 + p.depth * .42);
+        ctx!.globalAlpha = edge * (.22 + p.depth * .42) * (ambient ? .7 : 1);
         const radius = .5 + p.depth * .65 + Math.min(.5, Math.abs(p.lift));
         ctx!.beginPath(); ctx!.arc(p.x, p.y, radius, 0, Math.PI * 2); ctx!.fill();
       }

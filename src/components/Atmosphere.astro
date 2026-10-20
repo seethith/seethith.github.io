@@ -13,15 +13,19 @@
   type Petal = { x: number; y: number; size: number; speed: number; drift: number; phase: number; angle: number; alpha: number };
   let petals: Petal[] = [];
   let width = 0, height = 0, frame = 0, lastTime = 0;
+  let hero = document.querySelector<HTMLElement>('.stage-hero');
+  let heroVisible = !!hero;
+  let heroObserver: IntersectionObserver | undefined;
   let dark = document.documentElement.dataset.theme === 'dark';
   const random = (min: number, max: number) => min + Math.random() * (max - min);
-  const enabled = () => document.documentElement.dataset.sakura === 'on' && !reducedMotion.matches && !document.hidden;
+  const enabled = () => !!hero && heroVisible && document.documentElement.dataset.sakura === 'on' && !reducedMotion.matches && !document.hidden;
 
   function makePetal(initial = false): Petal {
     return {
-      x: random(-20, width + 20), y: initial ? random(0, height) : -25,
-      size: random(5, 10), speed: random(15, 30), drift: random(-8, 5),
-      phase: random(0, Math.PI * 2), angle: random(-0.7, 0.7), alpha: random(0.35, 0.65),
+      x: Math.random() < .5 ? random(4, width < 760 ? 12 : 28) : random(width - (width < 760 ? 12 : 28), width - 4),
+      y: initial ? random(0, height) : -10,
+      size: random(3, 6), speed: random(10, 19), drift: random(-.25, .25),
+      phase: random(0, Math.PI * 2), angle: random(-0.7, 0.7), alpha: random(0.25, 0.45),
     };
   }
 
@@ -32,7 +36,7 @@
     canvas.width = Math.round(width * ratio);
     canvas.height = Math.round(height * ratio);
     context?.setTransform(ratio, 0, 0, ratio, 0, 0);
-    petals = Array.from({ length: width < 760 ? 8 : 16 }, () => makePetal(true));
+    petals = Array.from({ length: width < 760 ? 3 : 5 }, () => makePetal(true));
   }
 
   function draw(time: number) {
@@ -40,15 +44,22 @@
     if (!context || !enabled()) return;
     if (!lastTime) lastTime = time;
     const elapsed = time - lastTime;
-    if (elapsed >= 1000 / 30) {
+    if (elapsed >= 1000 / 20) {
       const delta = Math.min(elapsed / 1000, 0.06);
       lastTime = time;
       context.clearRect(0, 0, width, height);
+      const bounds = hero!.getBoundingClientRect();
+      const clipTop = Math.max(76, bounds.top);
+      const clipBottom = Math.min(height, bounds.bottom - 86);
+      context.save();
+      context.beginPath();
+      context.rect(0, clipTop, width, Math.max(0, clipBottom - clipTop));
+      context.clip();
       for (let i = 0; i < petals.length; i++) {
         let petal = petals[i]!;
         petal.y += petal.speed * delta;
         petal.phase += delta * 0.45;
-        petal.x += (petal.drift + Math.sin(petal.phase) * 8) * delta;
+        petal.x += (petal.drift + Math.sin(petal.phase) * .5) * delta;
         if (petal.y > height + 30 || petal.x < -45 || petal.x > width + 45) {
           petal = petals[i] = makePetal();
         }
@@ -67,6 +78,7 @@
         context.fill();
         context.restore();
       }
+      context.restore();
     }
     frame = requestAnimationFrame(draw);
   }
@@ -85,10 +97,21 @@
   }
 
   window.addEventListener('appearancechange', sync);
+  function observeHero() {
+    heroObserver?.disconnect();
+    hero = document.querySelector<HTMLElement>('.stage-hero');
+    heroVisible = false;
+    if (hero) {
+      heroObserver = new IntersectionObserver(([entry]) => { heroVisible = !!entry?.isIntersecting; sync(); });
+      heroObserver.observe(hero);
+    }
+    sync();
+  }
+  document.addEventListener('astro:after-swap', observeHero);
   document.addEventListener('visibilitychange', sync);
   reducedMotion.addEventListener('change', sync);
   window.addEventListener('resize', () => { resize(); sync(); }, { passive: true });
   window.addEventListener('pagehide', () => { if (frame) cancelAnimationFrame(frame); frame = 0; });
   window.addEventListener('pageshow', sync);
-  sync();
+  observeHero();
 </script>

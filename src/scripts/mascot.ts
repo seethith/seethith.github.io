@@ -36,7 +36,7 @@ export function initMascot(mascot: HTMLElement) {
   const loading = find<HTMLElement>('.mascot-loading');
   const loadingText = find<HTMLElement>('.mascot-loading-text');
   const retry = find<HTMLButtonElement>('.mascot-retry');
-  const desktop = matchMedia('(min-width: 1200px)');
+  const stageViewport = matchMedia('(min-width: 360px)');
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const greetings = ['你好呀。', '左边可以听歌 ♪', '慢慢逛。'];
   let renderer: Live2DRenderer | undefined;
@@ -44,8 +44,30 @@ export function initMascot(mascot: HTMLElement) {
   let failed = false;
   let greeting = 0;
   let timer: ReturnType<typeof setTimeout> | undefined;
+  let slot: HTMLElement | null = null;
+  let stageInView = false;
+  let stageObserver: IntersectionObserver | undefined;
+  let pageReady = false;
+  let switchingPage = false;
   const enabled = () => document.documentElement.dataset.mascot === 'on';
-  const visible = () => enabled() && (desktop.matches || dialog.open) && !document.hidden;
+  const onStage = () => !!slot && stageInView && stageViewport.matches && !dialog.open && !switchingPage;
+  const visible = () => pageReady && enabled() && (onStage() || dialog.open) && !document.hidden && !switchingPage;
+
+  function findStage() {
+    stageObserver?.disconnect();
+    slot = document.querySelector<HTMLElement>('.stage-mascot-slot');
+    stageInView = false;
+    if (slot) {
+      const rect = slot.getBoundingClientRect();
+      stageInView = rect.width > 0 && rect.bottom > 88 && rect.top < innerHeight;
+      stageObserver = new IntersectionObserver(([entry]) => {
+        stageInView = !!entry?.isIntersecting;
+        sync();
+      }, { rootMargin: '-88px 0px 0px 0px', threshold: 0 });
+      stageObserver.observe(slot);
+    }
+    sync();
+  }
 
   function dismissBubble() {
     clearTimeout(timer);
@@ -81,14 +103,13 @@ export function initMascot(mascot: HTMLElement) {
   }
 
   function sync() {
-    if (desktop.matches) {
-      if (dialog.open) dialog.close();
-      if (stage.parentElement !== desktopHost) desktopHost.append(stage);
-    } else if (stage.parentElement !== mobileHost) mobileHost.append(stage);
     if (!enabled()) {
       if (dialog.open) dialog.close();
       dismissBubble();
     }
+    const host = dialog.open ? mobileHost : onStage() && enabled() ? slot! : desktopHost;
+    if (stage.parentElement !== host) host.append(stage);
+    mascot.dataset.presentation = onStage() ? 'stage' : 'compact';
     if (renderer) {
       renderer.resize();
       renderer.setActive(visible(), reducedMotion.matches);
@@ -114,15 +135,6 @@ export function initMascot(mascot: HTMLElement) {
     event.preventDefault();
     renderer.look(...direction);
   });
-  // Desktop artwork lets links/text beneath it receive the click. Only greet on
-  // otherwise inactive space; keyboard activation and the mobile dialog still work.
-  document.addEventListener('click', event => {
-    if (!desktop.matches || !visible() || !renderer || window.getSelection()?.toString()) return;
-    if (!(event.target instanceof Element) || event.target.closest('a,button,input,select,textarea,[role="button"],label')) return;
-    const rect = canvas.getBoundingClientRect();
-    if (event.clientX >= rect.left && event.clientX <= rect.right &&
-        event.clientY >= rect.top && event.clientY <= rect.bottom) greet();
-  });
   mascot.querySelectorAll('.mascot-close').forEach(button => button.addEventListener('click', () => {
     window.dispatchEvent(new CustomEvent('mascotchange', { detail: false }));
     sync();
@@ -147,13 +159,21 @@ export function initMascot(mascot: HTMLElement) {
   document.addEventListener('pointerleave', () => renderer?.look(0, 0));
   document.addEventListener('keydown', event => { if (event.key === 'Escape') dismissBubble(); });
   document.addEventListener('pointerdown', event => {
-    if (event.target instanceof Node && !mascot.contains(event.target)) dismissBubble();
+    if (event.target instanceof Node && !mascot.contains(event.target) && !stage.contains(event.target)) dismissBubble();
   });
-  document.addEventListener('astro:before-swap', () => { if (dialog.open) dialog.close(); dismissBubble(); });
-  document.addEventListener('astro:after-swap', sync);
+  document.addEventListener('astro:before-swap', () => {
+    switchingPage = true;
+    stageObserver?.disconnect();
+    if (dialog.open) dialog.close();
+    dismissBubble();
+    // Return the same canvas to the persistent root before Astro removes the hero.
+    desktopHost.append(stage);
+    renderer?.setActive(false, reducedMotion.matches);
+  });
+  document.addEventListener('astro:after-swap', () => { switchingPage = false; findStage(); });
   window.addEventListener('appearancechange', sync);
   document.addEventListener('visibilitychange', sync);
-  desktop.addEventListener('change', sync);
+  stageViewport.addEventListener('change', findStage);
   reducedMotion.addEventListener('change', sync);
   new ResizeObserver(() => { if (visible()) renderer?.resize(); }).observe(character);
   canvas.addEventListener('webglcontextlost', event => {
@@ -170,6 +190,7 @@ export function initMascot(mascot: HTMLElement) {
     sync();
   });
   // Paint the homepage first. Disabled/collapsed mascots load no model assets.
-  if (document.readyState === 'complete') setTimeout(sync, 200);
-  else window.addEventListener('load', () => setTimeout(sync, 200), { once: true });
+  const start = () => { pageReady = true; findStage(); };
+  if (document.readyState === 'complete') setTimeout(start, 200);
+  else window.addEventListener('load', () => setTimeout(start, 200), { once: true });
 }

@@ -3,6 +3,7 @@ import '../styles/global.css';
 import '../styles/refinement.css';
 import '../styles/continuity.css';
 import '../styles/art-direction.css';
+import '../styles/stage.css';
 import { profile } from '../data/site';
 import Appearance from '../components/Appearance.astro';
 import Atmosphere from '../components/Atmosphere.astro';
@@ -19,7 +20,7 @@ const { title = `${profile.name} · 个人主页`, description = profile.intro }
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#f5f3ee" />
+    <meta name="theme-color" content="#f5efe7" />
     <link rel="preload" href="/fonts/manrope-latin-variable.woff" as="font" type="font/woff" crossorigin />
     <ClientRouter fallback="swap" />
     <script is:inline>
@@ -46,7 +47,7 @@ const { title = `${profile.name} · 个人主页`, description = profile.intro }
         document.documentElement.dataset.wallpaper = wallpaper;
         document.documentElement.dataset.sakura = sakura ? 'on' : 'off';
         document.documentElement.dataset.mascot = mascot ? 'on' : 'off';
-        document.querySelector('meta[name="theme-color"]').content = theme === 'dark' ? '#121621' : '#f5f3ee';
+        document.querySelector('meta[name="theme-color"]').content = theme === 'dark' ? '#111827' : '#f5efe7';
       })();
     </script>
     <meta property="og:title" content={title} />
@@ -60,7 +61,7 @@ const { title = `${profile.name} · 个人主页`, description = profile.intro }
     <a class="skip-link" href="#main">跳到主要内容</a>
     <div class="site-shell">
       <header class="site-header flex items-center justify-between" transition:name="site-header" transition:animate="none">
-        <a href="/" class="brand" aria-label="buluku 首页"><span class="brand-mark">b<span>✳</span></span><span>{profile.name}<span class="brand-period">.</span></span></a>
+        <a href="/" class="brand" aria-label="buluku 首页"><span class="brand-mark">b<span>✦</span></span><span>{profile.name}<span class="brand-period">.</span></span></a>
         <div class="header-actions">
           <nav class="flex items-center gap-7" aria-label="主要导航">
             <a href="/#playground">小工具</a><a href="/#articles">文章</a><a href="/#links">链接</a>

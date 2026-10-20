@@ -42,7 +42,7 @@ export function initPageMotion() {
       { opacity: 0, transform: title ? 'translateY(105%)' : 'translateY(22px)' },
       { opacity: 1, transform: 'translateY(0)' },
     ], {
-      duration: title ? 1050 : 850,
+      duration: title ? 700 : 550,
       delay: Math.min(Number(element.dataset.delay) || 0, 240),
       easing: 'cubic-bezier(.22,1,.36,1)', fill: 'both',
     });

@@ -9,7 +9,8 @@ export async function createLive2D(canvas: HTMLCanvasElement) {
     resolution: Math.min(window.devicePixelRatio || 1, 2), autoDensity: true,
     antialias: true, autoStart: false, sharedTicker: false, powerPreference: 'low-power',
   });
-  app.ticker.maxFPS = 30;
+  // Share the stage with the wave without running two high-frequency render loops.
+  app.ticker.maxFPS = 24;
   let model: Live2DModel;
   try {
     model = await Live2DModel.from('/live2d/Hiyori/Hiyori.model3.json', {
