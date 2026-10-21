@@ -32,12 +32,19 @@ function Cover({ track }: { track?: MusicTrack }) {
 export default function MusicPlayer({ tracks }: { tracks: MusicTrack[] }) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const playerRef = useRef<HTMLElement>(null);
+  const recordRef = useRef<HTMLButtonElement>(null);
   const expandRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const panelMotion = useRef<ReturnType<typeof createSleeveMotion> | null>(null);
   const selected = useRef(0);
   const request = useRef(0);
+  const hovered = useRef(false);
+  const keyboardWithin = useRef(false);
+  const pressing = useRef(false);
+  const touchOpen = useRef(false);
+  const closeTimer = useRef<number | undefined>(undefined);
   const [index, setIndex] = useState(0);
+  const [revealed, setRevealed] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -50,6 +57,30 @@ export default function MusicPlayer({ tracks }: { tracks: MusicTrack[] }) {
   const track = tracks[index];
   const displayDuration = duration || track?.duration || 0;
   const progress = displayDuration ? Math.min(100, time / displayDuration * 100) : 0;
+
+  function cancelClose() {
+    window.clearTimeout(closeTimer.current);
+    closeTimer.current = undefined;
+  }
+
+  function revealPlayer() {
+    cancelClose();
+    setRevealed(true);
+  }
+
+  function hidePlayer() {
+    cancelClose();
+    touchOpen.current = false;
+    setExpanded(false);
+    setRevealed(false);
+  }
+
+  function scheduleClose() {
+    cancelClose();
+    closeTimer.current = window.setTimeout(() => {
+      if (!hovered.current && !keyboardWithin.current && !pressing.current && !touchOpen.current) hidePlayer();
+    }, 220);
+  }
 
   useEffect(() => {
     if (!panelRef.current) return;
@@ -72,21 +103,39 @@ export default function MusicPlayer({ tracks }: { tracks: MusicTrack[] }) {
     audio.volume = savedVolume;
     setVolume(savedVolume);
     const closeOutside = (event: PointerEvent) => {
-      if (event.target instanceof Node && !playerRef.current?.contains(event.target)) setExpanded(false);
-    };
-    const escape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && playerRef.current?.contains(document.activeElement)) {
-        setExpanded(false);
-        expandRef.current?.focus();
+      if (event.target instanceof Node && !playerRef.current?.contains(event.target)) {
+        keyboardWithin.current = false;
+        hidePlayer();
       }
     };
-    const closeOnNavigation = () => { panelMotion.current?.setOpen(false, true); setExpanded(false); };
+    const escape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && playerRef.current?.dataset.revealed === 'true') {
+        if (playerRef.current.contains(document.activeElement)) recordRef.current?.focus();
+        keyboardWithin.current = false;
+        hidePlayer();
+      }
+    };
+    const releasePointer = () => {
+      if (!pressing.current) return;
+      pressing.current = false;
+      scheduleClose();
+    };
+    const closeOnNavigation = () => {
+      panelMotion.current?.setOpen(false, true);
+      hovered.current = keyboardWithin.current = pressing.current = false;
+      hidePlayer();
+    };
     document.addEventListener('pointerdown', closeOutside);
+    document.addEventListener('pointerup', releasePointer);
+    document.addEventListener('pointercancel', releasePointer);
     document.addEventListener('keydown', escape);
     document.addEventListener('astro:after-swap', closeOnNavigation);
     return () => {
       audio.pause();
+      cancelClose();
       document.removeEventListener('pointerdown', closeOutside);
+      document.removeEventListener('pointerup', releasePointer);
+      document.removeEventListener('pointercancel', releasePointer);
       document.removeEventListener('keydown', escape);
       document.removeEventListener('astro:after-swap', closeOnNavigation);
     };
@@ -160,7 +209,30 @@ export default function MusicPlayer({ tracks }: { tracks: MusicTrack[] }) {
     try { localStorage.setItem(repeatKey, value ? 'one' : 'all'); } catch {}
   }
 
-  return <aside className="music-player" ref={playerRef} aria-label="音乐播放器" data-playing={playing} data-expanded={expanded}>
+  return <aside className="music-player" ref={playerRef} aria-label="音乐播放器" data-playing={playing} data-expanded={expanded} data-revealed={revealed}
+    onPointerEnter={event => {
+      if (event.pointerType !== 'mouse' || !matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+      hovered.current = true;
+      touchOpen.current = false;
+      revealPlayer();
+    }}
+    onPointerLeave={() => { hovered.current = false; scheduleClose(); }}
+    onPointerDownCapture={event => {
+      touchOpen.current = event.pointerType !== 'mouse' || !matchMedia('(hover: hover) and (pointer: fine)').matches;
+      keyboardWithin.current = false;
+      pressing.current = true;
+      cancelClose();
+    }}
+    onKeyDownCapture={() => { keyboardWithin.current = true; }}
+    onFocusCapture={event => {
+      if (!pressing.current && event.target.matches(':focus-visible')) { keyboardWithin.current = true; revealPlayer(); }
+    }}
+    onBlurCapture={event => {
+      if (!(event.relatedTarget instanceof Node) || !event.currentTarget.contains(event.relatedTarget)) {
+        keyboardWithin.current = false;
+        scheduleClose();
+      }
+    }}>
     <audio ref={audioRef} preload="none" loop={repeatOne}
       onPlay={() => setPlaying(true)}
       onPlaying={() => { setPlaying(true); setLoading(false); }}
@@ -172,7 +244,10 @@ export default function MusicPlayer({ tracks }: { tracks: MusicTrack[] }) {
       onEnded={() => choose(selected.current + 1, true)}
       onError={() => { if (audioRef.current?.getAttribute('src')) { setError('这首歌暂时无法播放，可重试或换一首'); setLoading(false); setPlaying(false); } }}
     />
-    <div className="music-sleeve">
+    <button type="button" className="music-record" ref={recordRef} aria-label={expanded ? '收起唱片歌单' : '展开唱片歌单'} aria-controls="music-playlist" aria-expanded={expanded} onClick={() => { revealPlayer(); setExpanded(value => !value); }}>
+      <span className="music-record-grooves" aria-hidden="true"><span className="music-cover"><Cover track={track} /></span></span>
+    </button>
+    <div className="music-sleeve" inert={!revealed} aria-hidden={!revealed}>
     <div className="music-panel" id="music-playlist" ref={panelRef} hidden inert={!expanded} aria-hidden={!expanded}>
       <div className="music-panel-content">
       <div className="music-panel-heading"><span>我的歌单 <span className="music-count">{tracks.length.toString().padStart(2, '0')}</span></span><button type="button" className="music-icon-button" aria-label="收起歌单" onClick={() => { setExpanded(false); expandRef.current?.focus(); }}><Icon name="close" /></button></div>
@@ -208,9 +283,6 @@ export default function MusicPlayer({ tracks }: { tracks: MusicTrack[] }) {
       <span className="music-mini-progress" aria-hidden="true"><span style={{ width: `${progress}%` }} /></span>
     </div>
     </div>
-    <button type="button" className="music-record" aria-label={expanded ? '收起唱片歌单' : '展开唱片歌单'} aria-controls="music-playlist" aria-expanded={expanded} onClick={() => setExpanded(value => !value)}>
-      <span className="music-record-grooves" aria-hidden="true"><span className="music-cover"><Cover track={track} /></span></span>
-    </button>
     <noscript>播放器需要启用 JavaScript。</noscript>
   </aside>;
 }
