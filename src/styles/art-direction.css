@@ -76,7 +76,7 @@ body { position:relative; min-height:100dvh; }
 .primary-button { font-weight:500; }
 .primary-button .button-arrow { border-color:color-mix(in srgb,currentColor 40%,transparent); }
 
-/* Three small art studies, held by the same inset, marker and caption baseline. */
+/* Three small art studies, held by the same inset and caption baseline. */
 .project-card { padding:12px; gap:0; border-radius:21px; }
 .project-card .project-info { padding:22px 12px 13px; border:0; }
 .project-info h3 { font-weight:500; margin-bottom:7px; }
@@ -85,7 +85,6 @@ body { position:relative; min-height:100dvh; }
   position:relative; height:210px; margin:0; border-radius:12px; overflow:hidden;
   border:1px solid color-mix(in srgb,var(--ink) 5%,transparent);
 }
-.art-marker { position:absolute; z-index:2; }
 .chess-thumbnail { background:radial-gradient(ellipse at 30% 15%,#fdf7e9,#e8e3d8 85%); }
 .chess-board { opacity:.45; transform:perspective(550px) rotateX(34deg) rotateZ(-17deg) scale(1.05); }
 .chess-piece { border-width:1px; outline-width:4px; box-shadow:0 12px 16px #46392320,0 -3px 0 #b5a58740 inset,0 1px 0 #fff9 inset; }

@@ -9,7 +9,9 @@ const articles = await getArticles();
 ---
 <Layout>
   <section class="hero stage-hero" aria-labelledby="hero-title">
-    <h1 id="hero-title" class="stage-title" data-reveal><span class="hero-name">{profile.name}<span class="blue-period">.</span></span></h1>
+    <div class="stage-title-position">
+      <h1 id="hero-title" class="stage-title" data-reveal><span class="hero-name">{profile.name}<span class="blue-period">.</span></span></h1>
+    </div>
     <div class="stage-mascot-slot" aria-label="首屏看板娘"></div>
     <nav class="chapter-nav" aria-label="首页章节">
       <a href="#playground"><span class="chapter-marker" aria-hidden="true"></span><span>小工具</span><span class="chapter-arrow" aria-hidden="true">↘</span></a>
@@ -23,18 +25,17 @@ const articles = await getArticles();
     <div class="project-grid">
       <a class="project-card chess-project" href={xiangqi.url} target="_blank" rel="noopener noreferrer" aria-label="打开象棋工具（新标签页）" data-reveal data-surface>
         <div class="chess-thumbnail" aria-hidden="true">
-          <span class="art-marker" aria-hidden="true"></span>
           <svg class="chess-board" viewBox="0 0 260 168" fill="none"><path d="M34 20H226M34 52H226M34 84H226M34 116H226M34 148H226M34 20V148M66 20V148M98 20V148M130 20V148M162 20V148M194 20V148M226 20V148M98 20L162 84M162 20L98 84" /></svg>
           <span class="chess-piece chess-red">帥</span><span class="chess-piece chess-black">馬</span>
         </div>
         <div class="project-info"><h3>{xiangqi.title}<span class="expand-icon" aria-hidden="true">↗</span></h3><p>摆棋盘，分析下一步。</p></div>
       </a>
       <article id="palette" class="project-card palette-card" data-reveal data-delay="70" data-surface>
-        <div class="palette-art"><span class="art-marker" aria-hidden="true"></span><PalettePlay client:visible /></div>
+        <div class="palette-art"><PalettePlay client:visible /></div>
         <div class="project-info"><h3>配色工具</h3><p>5 组预设配色。</p></div>
       </article>
       <a class="project-card ripple-project" href="/lab/ripple/" aria-label="打开像素潮汐" data-reveal data-delay="140" data-surface data-route-surface="ripple-card">
-        <div class="ripple-thumbnail" aria-hidden="true"><span class="art-marker" aria-hidden="true"></span><div class="contour contour-one"></div><div class="contour contour-two"></div><div class="contour contour-three"></div><div class="contour contour-four"></div><span class="center-plus">+</span></div>
+        <div class="ripple-thumbnail" aria-hidden="true"><div class="contour contour-one"></div><div class="contour contour-two"></div><div class="contour contour-three"></div><div class="contour contour-four"></div><span class="center-plus">+</span></div>
         <div class="project-info"><h3><span data-route-title="ripple">像素潮汐</span><span class="expand-icon" aria-hidden="true">↗</span></h3><p>拨动波面，点击泛起涟漪。<br />打开完整实验，调节波动幅度。</p></div>
       </a>
     </div>
