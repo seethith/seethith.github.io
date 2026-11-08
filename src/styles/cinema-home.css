@@ -1,0 +1,267 @@
+:is(body:has(.cinema-hero), .stage-hero.cinema-hero) {
+  --opening-height: max(688px, 100svh);
+}
+
+/* The landscape ends with the opening, so the tools have a quiet background. */
+body:has(.cinema-hero) .wallpaper-layer {
+  position: absolute;
+  inset: 0 0 auto;
+  height: var(--opening-height);
+}
+
+body:has(.cinema-hero) .page-atmosphere-wash {
+  inset: 0 0 auto;
+  height: var(--opening-height);
+  background: linear-gradient(to bottom, transparent 78%, var(--paper) 100%);
+}
+
+body:has(.cinema-hero) .wallpaper-dusk {
+  background-position: 56% center;
+}
+
+body:has(.cinema-hero) .wallpaper-dusk::before {
+  background:
+    linear-gradient(90deg, #f5efe7dc 0%, #f5efe7ad 29%, #f5efe733 67%, transparent 100%),
+    linear-gradient(180deg, #f5efe75e, transparent 23%);
+}
+
+body:has(.cinema-hero) .wallpaper-dusk::after {
+  background:
+    linear-gradient(90deg, #111827c4 0%, #11182799 26%, #11182736 60%, #11182708 100%),
+    linear-gradient(180deg, #11182771, transparent 29%);
+}
+
+body:has(.cinema-hero) .site-header:not([data-scrolled]) nav {
+  display: none;
+}
+
+.stage-hero.cinema-hero {
+  height: calc(var(--opening-height) - var(--stage-header-height));
+  min-height: 0;
+}
+
+.cinema-hero .stage-title-position {
+  top: 44%;
+}
+
+.cinema-hero .stage-title {
+  margin-inline: 0;
+  text-align: left;
+}
+
+.cinema-hero .hero-name {
+  font-size: clamp(100px, 11vw, 172px);
+  line-height: 1.06;
+  text-shadow: none;
+}
+
+.cinema-intro {
+  margin-top: 15px;
+  color: var(--muted);
+  font-size: 15px;
+  letter-spacing: .06em;
+}
+
+.cinema-hero .chapter-nav {
+  right: auto;
+  bottom: 38px;
+  width: min(460px, 100%);
+  border-color: color-mix(in srgb, var(--ink) 28%, transparent);
+}
+
+.cinema-hero .chapter-nav a {
+  min-height: 54px;
+  padding-block: 10px;
+  padding-right: 16px;
+  font-size: 13px;
+}
+
+.cinema-hero .chapter-nav a + a {
+  padding-left: 18px;
+}
+
+.cinema-hero .chapter-marker {
+  width: 2px;
+  height: 12px;
+}
+
+.cinema-hero .chapter-arrow {
+  font-size: 16px;
+}
+
+.playground-section.cinema-tools {
+  padding-top: clamp(35px, 4vw, 56px);
+}
+
+.cinema-tools .project-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px 24px;
+  margin-top: 24px;
+}
+
+.cinema-tools .ripple-project {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+
+.cinema-tools .ripple-project .ripple-thumbnail {
+  aspect-ratio: auto;
+  height: clamp(250px, 26vw, 360px);
+  background:
+    radial-gradient(ellipse at 73% 29%, #53475f 0%, transparent 47%),
+    radial-gradient(ellipse at 47% 63%, #254468 0%, transparent 67%),
+    #111c30;
+  border: 1px solid #8397bf45;
+  border-radius: 4px;
+}
+
+.cinema-tools .ripple-thumbnail::before {
+  opacity: .24;
+  background-image: radial-gradient(#c1cdec 0.65px, transparent 0.65px);
+  background-size: 18px 18px;
+  mask-image: radial-gradient(ellipse, #000, transparent 76%);
+}
+
+.ripple-cover-art {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: brightness(1.16);
+}
+
+.cinema-tools .ripple-project .project-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding-top: 18px;
+}
+
+.cinema-tools .ripple-project h3 {
+  margin-bottom: 4px;
+  font-size: clamp(23px, 2.6vw, 34px);
+  letter-spacing: -.035em;
+}
+
+.ripple-open {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.ripple-open span {
+  color: var(--accent);
+  font-size: 21px;
+}
+
+.cinema-tools :is(.chess-thumbnail, .palette-art) {
+  aspect-ratio: auto;
+  height: clamp(120px, 14vw, 164px);
+}
+
+.cinema-tools .palette-play {
+  padding-top: 21px;
+}
+
+@media (min-width: 761px) {
+  .cinema-tools .palette-swatches {
+    transform: rotate(-2deg);
+  }
+}
+
+@media (max-width: 760px) {
+  :is(body:has(.cinema-hero), .stage-hero.cinema-hero) {
+    --opening-height: max(624px, 100svh);
+  }
+
+  body:has(.cinema-hero) .wallpaper-dusk {
+    background-position: 57% center;
+  }
+
+  body:has(.cinema-hero) .wallpaper-dusk::before {
+    background:
+      linear-gradient(90deg, #f5efe7b0 0%, #f5efe76b 55%, #f5efe710 100%),
+      linear-gradient(180deg, #f5efe770, transparent 28%);
+  }
+
+  body:has(.cinema-hero) .wallpaper-dusk::after {
+    background:
+      linear-gradient(90deg, #1118278c 0%, #11182748 56%, transparent 100%),
+      linear-gradient(180deg, #11182770, transparent 30%);
+  }
+
+  .cinema-hero .stage-title-position {
+    top: 41%;
+  }
+
+  .cinema-hero .hero-name {
+    font-size: clamp(60px, 19vw, 110px);
+  }
+
+  .cinema-intro {
+    margin-top: 11px;
+    font-size: 13px;
+  }
+
+  .cinema-hero .chapter-nav {
+    bottom: 94px;
+  }
+
+  .cinema-hero .chapter-nav a {
+    gap: 8px;
+    padding-right: 12px;
+  }
+
+  .cinema-hero .chapter-nav a + a {
+    padding-left: 12px;
+  }
+
+  .cinema-tools .project-grid {
+    gap: 26px 12px;
+    margin-top: 19px;
+  }
+
+  .cinema-tools .ripple-project .ripple-thumbnail {
+    height: clamp(208px, 59vw, 290px);
+  }
+
+  .ripple-cover-art {
+    width: 122%;
+    max-width: none;
+  }
+
+  .cinema-tools .chess-project {
+    grid-column: auto;
+  }
+
+  .cinema-tools .chess-piece {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+
+  .cinema-tools .palette-play {
+    padding: 13px 9px 6px;
+  }
+
+  .cinema-tools .palette-swatches {
+    min-height: 36px;
+  }
+
+  .cinema-tools .palette-caption {
+    margin-top: 3px;
+  }
+
+  .cinema-tools .project-card:not(.ripple-project) .project-info {
+    padding-top: 12px;
+  }
+
+  .cinema-tools .project-card:not(.ripple-project) h3 {
+    margin-bottom: 2px;
+    font-size: 15px;
+  }
+}
