@@ -1,5 +1,12 @@
 :is(body:has(.cinema-hero), .stage-hero.cinema-hero) {
-  --opening-height: max(688px, 100svh);
+  --opening-viewport: 100vh;
+  --opening-height: max(688px, var(--opening-viewport));
+}
+
+@supports (height: 100svh) {
+  :is(body:has(.cinema-hero), .stage-hero.cinema-hero) {
+    --opening-viewport: 100svh;
+  }
 }
 
 /* The landscape ends with the opening, so the tools have a quiet background. */
@@ -175,7 +182,7 @@ body:has(.cinema-hero) .site-header:not([data-scrolled]) nav {
 
 @media (max-width: 760px) {
   :is(body:has(.cinema-hero), .stage-hero.cinema-hero) {
-    --opening-height: max(624px, 100svh);
+    --opening-height: max(624px, var(--opening-viewport));
   }
 
   body:has(.cinema-hero) .wallpaper-dusk {
